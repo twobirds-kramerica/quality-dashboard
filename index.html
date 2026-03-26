@@ -244,7 +244,9 @@ const REPOS = [
   'twobirds-kramerica/digital-confidence',
   'twobirds-kramerica/kevins-apartment-search',
   'twobirds-kramerica/two-birds-portfolio',
-  'twobirds-kramerica/two-birds-project-template'
+  'twobirds-kramerica/two-birds-project-template',
+  'twobirds-kramerica/career-coach',
+  'twobirds-kramerica/quality-dashboard'
 ];
 
 const API = 'https://api.github.com';
@@ -264,14 +266,25 @@ async function fileExists(repo, path) {
   } catch { return false; }
 }
 
+async function pagesEnabled(repo) {
+  try {
+    const r = await fetch(`${API}/repos/${repo}/pages`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+    return r.status === 200;
+  } catch { return false; }
+}
+
 async function checkRepo(repo) {
-  const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots] = await Promise.all([
+  const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots, hasPages, hasStrategy] = await Promise.all([
     fetchJSON(`${API}/repos/${repo}`),
     fetchJSON(`${API}/repos/${repo}/commits?per_page=1`),
     fileExists(repo, 'README.md'),
     fileExists(repo, 'CLAUDE.md'),
     fileExists(repo, 'sitemap.xml'),
-    fileExists(repo, 'robots.txt')
+    fileExists(repo, 'robots.txt'),
+    pagesEnabled(repo),
+    fileExists(repo, '_strategy')
   ]);
 
   const lastCommit   = commits[0] || null;
@@ -288,14 +301,17 @@ async function checkRepo(repo) {
     'sitemap.xml present':  hasSitemap,
     'robots.txt present':   hasRobots,
     'Has stars':            meta.stargazers_count >= 1,
-    'Has description':      !!(meta.description && meta.description.trim())
+    'Has description':      !!(meta.description && meta.description.trim()),
+    'GitHub Pages enabled': hasPages,
+    '_strategy/ present':   hasStrategy
   };
 
   const score = Object.values(checks).filter(Boolean).length;
-  const badge = score >= 7 ? 'green' : score >= 5 ? 'yellow' : 'red';
-  const label = score >= 7 ? 'Healthy' : score >= 5 ? 'Needs Attention' : 'Action Required';
+  const total = Object.keys(checks).length;
+  const badge = score >= 8 ? 'green' : score >= 6 ? 'yellow' : 'red';
+  const label = score >= 8 ? 'Healthy' : score >= 6 ? 'Needs Attention' : 'Action Required';
 
-  return { repo, meta, commitDate, commitMsg, daysSince, checks, score, badge, label };
+  return { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label };
 }
 
 function formatDate(d) {
@@ -317,10 +333,10 @@ function renderSkeleton(repo) {
 }
 
 function renderCard(data) {
-  const { repo, meta, commitDate, commitMsg, daysSince, checks, score, badge, label } = data;
+  const { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label } = data;
   const fillClass = `fill-${badge}`;
   const badgeClass = `badge-${badge}`;
-  const pct = Math.round((score / 8) * 100);
+  const pct = Math.round((score / total) * 100);
 
   const checkItems = Object.entries(checks).map(([name, pass]) => `
     <li>
@@ -343,12 +359,12 @@ function renderCard(data) {
         <div class="score-bar-track">
           <div class="score-bar-fill ${fillClass}" style="width:${pct}%"></div>
         </div>
-        <div class="score-label">${score}/8</div>
+        <div class="score-label">${score}/${total}</div>
       </div>
       <ul class="checklist">${checkItems}</ul>
       <div class="card-meta">
-        <span><strong>Last commit:</strong> ${formatDate(commitDate)} (${daysSince}d ago)</span>
-        <span class="commit-msg"><strong>Message:</strong> ${commitMsg}</span>
+        <span><strong>Last build:</strong> <em class="commit-msg">${commitMsg}</em></span>
+        <span><strong>Date:</strong> ${formatDate(commitDate)} (${daysSince}d ago)</span>
         <span><strong>Open issues:</strong> ${meta.open_issues_count} &nbsp; <strong>Stars:</strong> ${meta.stargazers_count}</span>
         <span><strong>Pages:</strong> <a href="${pagesUrl}" target="_blank" rel="noopener" style="color:var(--teal)">${pagesUrl}</a></span>
       </div>
