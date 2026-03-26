@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Quality Dashboard | Two Birds Innovation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0F1B2D;
+      --card-bg: #1A2D44;
+      --card-border: #243d59;
+      --teal: #00C9A7;
+      --teal-dim: #009e84;
+      --white: #F0F4F8;
+      --muted: #8AA0B8;
+      --green: #2ECC71;
+      --yellow: #F39C12;
+      --red: #E74C3C;
+      --green-bg: rgba(46,204,113,0.12);
+      --yellow-bg: rgba(243,156,18,0.12);
+      --red-bg: rgba(231,76,60,0.12);
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #0a1520 0%, #1A2D44 100%);
+      border-bottom: 2px solid var(--teal);
+      padding: 28px 24px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: clamp(1.4em, 4vw, 2em);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .header h1 span { color: var(--teal); }
+    .header p {
+      color: var(--muted);
+      font-size: 0.95em;
+      margin-top: 6px;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #12233a;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .last-checked { color: var(--muted); font-size: 0.88em; }
+    .last-checked strong { color: var(--teal); }
+    .refresh-btn {
+      background: var(--teal);
+      color: #0F1B2D;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover { background: var(--teal-dim); }
+    .refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── Repo Card ── */
+    .repo-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .repo-card:hover { border-color: var(--teal); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .repo-name {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: var(--teal);
+      word-break: break-all;
+    }
+    .repo-link { color: var(--teal); text-decoration: none; }
+    .repo-link:hover { text-decoration: underline; }
+
+    /* Health badge */
+    .health-badge {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.78em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green); }
+    .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow); }
+    .badge-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red); }
+
+    /* Score bar */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .score-bar-track {
+      flex: 1;
+      height: 6px;
+      background: #0F1B2D;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+    .fill-green  { background: var(--green); }
+    .fill-yellow { background: var(--yellow); }
+    .fill-red    { background: var(--red); }
+    .score-label { color: var(--muted); font-size: 0.85em; white-space: nowrap; }
+
+    /* Checklist */
+    .checklist { list-style: none; margin-bottom: 14px; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 3px 0;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+    .check-icon { font-size: 1em; width: 16px; text-align: center; }
+    .pass { color: var(--green); }
+    .fail { color: var(--red); }
+    .check-label { flex: 1; }
+
+    /* Meta info */
+    .card-meta {
+      border-top: 1px solid var(--card-border);
+      padding-top: 12px;
+      font-size: 0.83em;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-meta span strong { color: var(--white); }
+    .commit-msg {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Skeleton */
+    .skeleton { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .skel-line {
+      background: var(--card-border);
+      border-radius: 4px;
+      height: 14px;
+      margin: 6px 0;
+    }
+
+    /* Error state */
+    .error-card {
+      background: var(--red-bg);
+      border: 1px solid var(--red);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--red);
+      font-size: 0.88em;
+      margin-top: 8px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82em;
+      padding: 24px;
+      border-top: 1px solid var(--card-border);
+      margin-top: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .grid { padding: 12px; gap: 12px; }
+      .toolbar { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <h1>Two Birds Innovation — <span>Build Quality Dashboard</span></h1>
+  <p>Automated health checks across all active repositories</p>
+</header>
+
+<div class="toolbar">
+  <div class="last-checked">Last checked: <strong id="ts">—</strong></div>
+  <button class="refresh-btn" id="refreshBtn" onclick="runChecks()">↻ Refresh</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Quality Dashboard &nbsp;|&nbsp; Two Birds Innovation &nbsp;|&nbsp; Checks run against GitHub public API</footer>
+
+<script>
+const REPOS = [
+  'twobirds-kramerica/digital-confidence',
+  'twobirds-kramerica/kevins-apartment-search',
+  'twobirds-kramerica/two-birds-portfolio',
+  'twobirds-kramerica/two-birds-project-template'
+];
+
+const API = 'https://api.github.com';
+
+async function fetchJSON(url) {
+  const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+  if (!r.ok) throw Object.assign(new Error(r.statusText), { status: r.status });
+  return r.json();
+}
+
+async function fileExists(repo, path) {
+  try {
+    const r = await fetch(`${API}/repos/${repo}/contents/${path}`, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+    return r.status === 200;
+  } catch { return false; }
+}
+
+async function checkRepo(repo) {
+  const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots] = await Promise.all([
+    fetchJSON(`${API}/repos/${repo}`),
+    fetchJSON(`${API}/repos/${repo}/commits?per_page=1`),
+    fileExists(repo, 'README.md'),
+    fileExists(repo, 'CLAUDE.md'),
+    fileExists(repo, 'sitemap.xml'),
+    fileExists(repo, 'robots.txt')
+  ]);
+
+  const lastCommit   = commits[0] || null;
+  const commitDate   = lastCommit ? new Date(lastCommit.commit.committer.date) : null;
+  const commitMsg    = lastCommit ? lastCommit.commit.message.split('\n')[0] : 'No commits';
+  const daysSince    = commitDate ? Math.floor((Date.now() - commitDate) / 86400000) : 999;
+  const recentCommit = daysSince < 30;
+
+  const checks = {
+    'README.md present':    hasReadme,
+    'CLAUDE.md present':    hasClaude,
+    'Committed within 30d': recentCommit,
+    'Open issues < 10':     meta.open_issues_count < 10,
+    'sitemap.xml present':  hasSitemap,
+    'robots.txt present':   hasRobots,
+    'Has stars':            meta.stargazers_count >= 1,
+    'Has description':      !!(meta.description && meta.description.trim())
+  };
+
+  const score = Object.values(checks).filter(Boolean).length;
+  const badge = score >= 7 ? 'green' : score >= 5 ? 'yellow' : 'red';
+  const label = score >= 7 ? 'Healthy' : score >= 5 ? 'Needs Attention' : 'Action Required';
+
+  return { repo, meta, commitDate, commitMsg, daysSince, checks, score, badge, label };
+}
+
+function formatDate(d) {
+  if (!d) return 'Never';
+  return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function renderSkeleton(repo) {
+  return `
+    <div class="repo-card skeleton">
+      <div class="card-header">
+        <div class="repo-name">${repo}</div>
+        <div class="health-badge badge-yellow">Checking…</div>
+      </div>
+      <div class="skel-line" style="width:80%"></div>
+      <div class="skel-line" style="width:60%"></div>
+      <div class="skel-line" style="width:70%"></div>
+    </div>`;
+}
+
+function renderCard(data) {
+  const { repo, meta, commitDate, commitMsg, daysSince, checks, score, badge, label } = data;
+  const fillClass = `fill-${badge}`;
+  const badgeClass = `badge-${badge}`;
+  const pct = Math.round((score / 8) * 100);
+
+  const checkItems = Object.entries(checks).map(([name, pass]) => `
+    <li>
+      <span class="check-icon ${pass ? 'pass' : 'fail'}">${pass ? '✓' : '✗'}</span>
+      <span class="check-label">${name}</span>
+    </li>`).join('');
+
+  const repoUrl = `https://github.com/${repo}`;
+  const pagesUrl = `https://${repo.split('/')[0]}.github.io/${repo.split('/')[1]}/`;
+
+  return `
+    <div class="repo-card">
+      <div class="card-header">
+        <div class="repo-name">
+          <a class="repo-link" href="${repoUrl}" target="_blank" rel="noopener">${repo}</a>
+        </div>
+        <div class="health-badge ${badgeClass}">${label}</div>
+      </div>
+      <div class="score-row">
+        <div class="score-bar-track">
+          <div class="score-bar-fill ${fillClass}" style="width:${pct}%"></div>
+        </div>
+        <div class="score-label">${score}/8</div>
+      </div>
+      <ul class="checklist">${checkItems}</ul>
+      <div class="card-meta">
+        <span><strong>Last commit:</strong> ${formatDate(commitDate)} (${daysSince}d ago)</span>
+        <span class="commit-msg"><strong>Message:</strong> ${commitMsg}</span>
+        <span><strong>Open issues:</strong> ${meta.open_issues_count} &nbsp; <strong>Stars:</strong> ${meta.stargazers_count}</span>
+        <span><strong>Pages:</strong> <a href="${pagesUrl}" target="_blank" rel="noopener" style="color:var(--teal)">${pagesUrl}</a></span>
+      </div>
+    </div>`;
+}
+
+function renderError(repo, err) {
+  const isRateLimit = err.status === 403;
+  return `
+    <div class="repo-card">
+      <div class="card-header">
+        <div class="repo-name">${repo}</div>
+        <div class="health-badge badge-red">Error</div>
+      </div>
+      <div class="error-card">
+        ${isRateLimit
+          ? '⚠️ GitHub API rate limit reached (60 req/hr for unauthenticated requests). Wait a minute and refresh.'
+          : `⚠️ Could not fetch data: ${err.message}`}
+      </div>
+    </div>`;
+}
+
+async function runChecks() {
+  const grid = document.getElementById('grid');
+  const btn  = document.getElementById('refreshBtn');
+  const ts   = document.getElementById('ts');
+
+  btn.disabled = true;
+  btn.textContent = '↻ Checking…';
+
+  // Show skeletons
+  grid.innerHTML = REPOS.map(renderSkeleton).join('');
+
+  // Fetch all repos in parallel
+  const results = await Promise.allSettled(REPOS.map(checkRepo));
+
+  grid.innerHTML = results.map((r, i) =>
+    r.status === 'fulfilled' ? renderCard(r.value) : renderError(REPOS[i], r.reason)
+  ).join('');
+
+  ts.textContent = new Date().toLocaleString('en-CA', {
+    dateStyle: 'medium', timeStyle: 'short'
+  });
+
+  btn.disabled = false;
+  btn.textContent = '↻ Refresh';
+}
+
+// Auto-run on load
+runChecks();
+</script>
+</body>
+</html>
