@@ -4,23 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Build Quality Dashboard | Two Birds Innovation</title>
+  <meta name="robots" content="noindex, nofollow">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy: #0F1B2D;
-      --card-bg: #1A2D44;
+      --navy:      #0F1B2D;
+      --card-bg:   #1A2D44;
       --card-border: #243d59;
-      --teal: #00C9A7;
-      --teal-dim: #009e84;
-      --white: #F0F4F8;
-      --muted: #8AA0B8;
-      --green: #2ECC71;
-      --yellow: #F39C12;
-      --red: #E74C3C;
-      --green-bg: rgba(46,204,113,0.12);
+      --teal:      #00C9A7;
+      --teal-dim:  #009e84;
+      --teal-bg:   rgba(0,201,167,0.12);
+      --white:     #F0F4F8;
+      --muted:     #8AA0B8;
+      --green:     #2ECC71;
+      --yellow:    #F39C12;
+      --red:       #E74C3C;
+      --green-bg:  rgba(46,204,113,0.12);
       --yellow-bg: rgba(243,156,18,0.12);
-      --red-bg: rgba(231,76,60,0.12);
+      --red-bg:    rgba(231,76,60,0.12);
     }
 
     body {
@@ -45,11 +47,7 @@
       letter-spacing: -0.5px;
     }
     .header h1 span { color: var(--teal); }
-    .header p {
-      color: var(--muted);
-      font-size: 0.95em;
-      margin-top: 6px;
-    }
+    .header p { color: var(--muted); font-size: 0.95em; margin-top: 6px; }
 
     /* ── Toolbar ── */
     .toolbar {
@@ -81,7 +79,7 @@
     /* ── Grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 20px;
       padding: 24px;
       max-width: 1200px;
@@ -104,16 +102,29 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
+    .repo-name-block { min-width: 0; }
     .repo-name {
       font-size: 1.05em;
       font-weight: 700;
       color: var(--teal);
-      word-break: break-all;
+    }
+    .repo-slug {
+      font-size: 0.72em;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 2px;
     }
     .repo-link { color: var(--teal); text-decoration: none; }
     .repo-link:hover { text-decoration: underline; }
+
+    .repo-desc {
+      font-size: 0.83em;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
 
     /* Health badge */
     .health-badge {
@@ -125,6 +136,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
+    .badge-teal   { background: var(--teal-bg);   color: var(--teal);   border: 1px solid var(--teal); }
     .badge-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green); }
     .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow); }
     .badge-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red); }
@@ -134,7 +146,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
     .score-bar-track {
       flex: 1;
@@ -148,10 +160,35 @@
       border-radius: 3px;
       transition: width 0.6s ease;
     }
+    .fill-teal   { background: var(--teal); }
     .fill-green  { background: var(--green); }
     .fill-yellow { background: var(--yellow); }
     .fill-red    { background: var(--red); }
-    .score-label { color: var(--muted); font-size: 0.85em; white-space: nowrap; }
+
+    .score-label {
+      color: var(--muted);
+      font-size: 0.85em;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Score legend */
+    .score-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      margin-bottom: 14px;
+      font-size: 0.75em;
+      color: var(--muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-dot.teal   { background: var(--teal); }
+    .legend-dot.green  { background: var(--green); }
+    .legend-dot.yellow { background: var(--yellow); }
+    .legend-dot.red    { background: var(--red); }
 
     /* Checklist */
     .checklist { list-style: none; margin-bottom: 14px; }
@@ -163,12 +200,72 @@
       font-size: 0.88em;
       color: var(--muted);
     }
-    .check-icon { font-size: 1em; width: 16px; text-align: center; }
+    .check-icon { font-size: 1em; width: 16px; text-align: center; flex-shrink: 0; }
     .pass { color: var(--green); }
     .fail { color: var(--red); }
+    .check-label-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
     .check-label { flex: 1; }
 
-    /* Meta info */
+    /* ── Tooltips ── */
+    .tip-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .tip-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid var(--muted);
+      color: var(--muted);
+      font-size: 0.7em;
+      font-style: normal;
+      font-weight: 700;
+      cursor: help;
+      opacity: 0.65;
+      flex-shrink: 0;
+      user-select: none;
+      line-height: 1;
+    }
+    .tip-icon:focus { outline: 1px solid var(--teal); opacity: 1; }
+    .tip-text {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px;
+      background: #0a1520;
+      color: var(--white);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 9px 11px;
+      font-size: 0.78em;
+      line-height: 1.45;
+      z-index: 30;
+      pointer-events: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      white-space: normal;
+    }
+    .tip-wrap:hover .tip-text,
+    .tip-wrap:focus-within .tip-text { display: block; }
+
+    /* Score tooltip — anchor right so it doesn't clip the card edge */
+    .score-tip .tip-text {
+      left: auto;
+      right: 0;
+      transform: none;
+    }
+
+    /* ── Card meta / commit message ── */
     .card-meta {
       border-top: 1px solid var(--card-border);
       padding-top: 12px;
@@ -178,15 +275,31 @@
       flex-direction: column;
       gap: 4px;
     }
-    .card-meta span strong { color: var(--white); }
-    .commit-msg {
-      white-space: nowrap;
+    .card-meta > span {
+      display: block;
       overflow: hidden;
+    }
+    .card-meta span strong { color: var(--white); }
+
+    /* Last build row — flex so commit msg truncates cleanly */
+    .last-build-row {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .last-build-label { flex-shrink: 0; }
+    .commit-msg {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
       text-overflow: ellipsis;
-      max-width: 100%;
+      font-style: italic;
     }
 
-    /* Skeleton */
+    /* ── Skeleton ── */
     .skeleton { animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
     .skel-line {
@@ -196,7 +309,7 @@
       margin: 6px 0;
     }
 
-    /* Error state */
+    /* ── Error state ── */
     .error-card {
       background: var(--red-bg);
       border: 1px solid var(--red);
@@ -207,7 +320,7 @@
       margin-top: 8px;
     }
 
-    /* Footer */
+    /* ── Footer ── */
     footer {
       text-align: center;
       color: var(--muted);
@@ -220,10 +333,108 @@
     @media (max-width: 480px) {
       .grid { padding: 12px; gap: 12px; }
       .toolbar { padding: 12px; }
+      .tip-text { width: 170px; }
+    }
+
+    /* ── PIN Gate ── */
+    #pin-gate {
+      position: fixed;
+      inset: 0;
+      background: var(--navy);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 24px;
+    }
+    #pin-gate h2 {
+      font-size: clamp(1.3em, 4vw, 1.8em);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    #pin-gate h2 span { color: var(--teal); }
+    #pin-gate .pin-sub {
+      color: var(--muted);
+      font-size: 0.92em;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    #pin-gate .pin-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 32px 36px;
+      width: 100%;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    #pin-input {
+      width: 100%;
+      background: #0F1B2D;
+      border: 2px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.5em;
+      text-align: center;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-text-security: disc;
+    }
+    #pin-input:focus { border-color: var(--teal); }
+    #pin-input.shake {
+      animation: shake 0.35s ease;
+      border-color: var(--red);
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-6px); }
+      80%      { transform: translateX(6px); }
+    }
+    #pin-submit {
+      width: 100%;
+      background: var(--teal);
+      color: #0F1B2D;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #pin-submit:hover { background: var(--teal-dim); }
+    #pin-error {
+      color: var(--red);
+      font-size: 0.88em;
+      min-height: 1.2em;
+      text-align: center;
     }
   </style>
 </head>
 <body>
+
+<div id="pin-gate" aria-label="PIN authentication">
+  <h2>Two Birds <span>Quality Dashboard</span></h2>
+  <p class="pin-sub">Internal use only</p>
+  <div class="pin-box">
+    <input id="pin-input" type="password" inputmode="numeric" pattern="[0-9]*"
+           maxlength="4" placeholder="••••" autocomplete="off"
+           aria-label="Enter 4-digit PIN" />
+    <button id="pin-submit" onclick="checkPin()">Unlock</button>
+    <div id="pin-error" aria-live="polite"></div>
+  </div>
+</div>
 
 <header class="header">
   <h1>Two Birds Innovation — <span>Build Quality Dashboard</span></h1>
@@ -249,7 +460,64 @@ const REPOS = [
   'twobirds-kramerica/quality-dashboard'
 ];
 
+const REPO_META = {
+  'twobirds-kramerica/digital-confidence': {
+    name: 'Digital Confidence Centre',
+    desc: 'A digital literacy platform for Canadian seniors. Covers scam protection, online banking, video calls, and more across 16 modules.'
+  },
+  'twobirds-kramerica/kevins-apartment-search': {
+    name: 'Apartment Search Tool',
+    desc: 'A personalised apartment hunting dashboard with live listings, neighbourhood safety ratings, and AI insights.'
+  },
+  'twobirds-kramerica/career-coach': {
+    name: 'Career Coach',
+    desc: 'An AI-powered job application coaching tool. Analyses job postings against your CV, scores fit, and generates customised applications.'
+  },
+  'twobirds-kramerica/quality-dashboard': {
+    name: 'Quality Dashboard',
+    desc: 'Internal build health monitor for all Two Birds Innovation products. Not public-facing.'
+  },
+  'twobirds-kramerica/two-birds-portfolio': {
+    name: 'Two Birds Portfolio',
+    desc: 'Enterprise backlog, WIP dashboard, and project archive for Two Birds Innovation.'
+  },
+  'twobirds-kramerica/two-birds-project-template': {
+    name: 'Project Template',
+    desc: 'Reusable GitHub Pages starter template for new Two Birds Innovation builds.'
+  }
+};
+
+const CHECK_TOOLTIPS = {
+  'Has README.md':        'A README file explains what the project is. Every repo should have one.',
+  'Has CLAUDE.md':        'CLAUDE.md contains guardrails and instructions for Claude Code builds on this project.',
+  'Recent commit (30d)':  'A commit within the last 30 days shows the project is actively maintained.',
+  'Open issues < 10':     'The number of open GitHub Issues. Issues are used as build reminders and review prompts.',
+  'Has sitemap.xml':      'A sitemap helps search engines find all pages on the site.',
+  'Has robots.txt':       'robots.txt tells search engines which pages to crawl and which to ignore.',
+  'Has stars':            'GitHub stars on this repo. Internal projects show 0 — this is expected and fine.',
+  'Has description':      'A GitHub repo description helps anyone landing on the repo understand what it does.',
+  'GitHub Pages enabled': 'GitHub Pages hosts this project as a live website. Green means the site is publicly accessible.',
+  'Has _strategy/':       'The strategy folder contains competitive analysis, personas, and monetisation plans.',
+  'Has viewport meta':    'Ensures the site displays correctly on mobile devices.',
+  'Has lang attribute':   'Helps screen readers and accessibility tools understand the page language.'
+};
+
+const SCORE_TOOLTIP = 'Counts how many of 12 build health checks this repo passes. Measures build completeness, not performance.';
+
 const API = 'https://api.github.com';
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function makeTip(text, extraClass) {
+  const cls = 'tip-wrap' + (extraClass ? ' ' + extraClass : '');
+  return `<span class="${cls}" tabindex="0"><i class="tip-icon" aria-label="More info" role="note">?</i><span class="tip-text">${esc(text)}</span></span>`;
+}
 
 async function fetchJSON(url) {
   const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
@@ -275,8 +543,17 @@ async function pagesEnabled(repo) {
   } catch { return false; }
 }
 
+async function fetchIndexHead(repo) {
+  try {
+    const r = await fetch(`https://raw.githubusercontent.com/${repo}/main/index.html`);
+    if (!r.ok) return '';
+    const text = await r.text();
+    return text.slice(0, 3000);
+  } catch { return ''; }
+}
+
 async function checkRepo(repo) {
-  const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots, hasPages, hasStrategy] = await Promise.all([
+  const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots, hasPages, hasStrategy, indexHead] = await Promise.all([
     fetchJSON(`${API}/repos/${repo}`),
     fetchJSON(`${API}/repos/${repo}/commits?per_page=1`),
     fileExists(repo, 'README.md'),
@@ -284,7 +561,8 @@ async function checkRepo(repo) {
     fileExists(repo, 'sitemap.xml'),
     fileExists(repo, 'robots.txt'),
     pagesEnabled(repo),
-    fileExists(repo, '_strategy')
+    fileExists(repo, '_strategy'),
+    fetchIndexHead(repo)
   ]);
 
   const lastCommit   = commits[0] || null;
@@ -293,23 +571,28 @@ async function checkRepo(repo) {
   const daysSince    = commitDate ? Math.floor((Date.now() - commitDate) / 86400000) : 999;
   const recentCommit = daysSince < 30;
 
+  const hasViewport = /meta[^>]+name=["']viewport/i.test(indexHead);
+  const hasLang     = /html[^>]+lang=/i.test(indexHead);
+
   const checks = {
-    'README.md present':    hasReadme,
-    'CLAUDE.md present':    hasClaude,
-    'Committed within 30d': recentCommit,
+    'Has README.md':        hasReadme,
+    'Has CLAUDE.md':        hasClaude,
+    'Recent commit (30d)':  recentCommit,
     'Open issues < 10':     meta.open_issues_count < 10,
-    'sitemap.xml present':  hasSitemap,
-    'robots.txt present':   hasRobots,
+    'Has sitemap.xml':      hasSitemap,
+    'Has robots.txt':       hasRobots,
     'Has stars':            meta.stargazers_count >= 1,
     'Has description':      !!(meta.description && meta.description.trim()),
     'GitHub Pages enabled': hasPages,
-    '_strategy/ present':   hasStrategy
+    'Has _strategy/':       hasStrategy,
+    'Has viewport meta':    hasViewport,
+    'Has lang attribute':   hasLang
   };
 
   const score = Object.values(checks).filter(Boolean).length;
-  const total = Object.keys(checks).length;
-  const badge = score >= 8 ? 'green' : score >= 6 ? 'yellow' : 'red';
-  const label = score >= 8 ? 'Healthy' : score >= 6 ? 'Needs Attention' : 'Action Required';
+  const total = Object.keys(checks).length; // 12
+  const badge = score >= 11 ? 'teal' : score >= 9 ? 'green' : score >= 7 ? 'yellow' : 'red';
+  const label = score >= 11 ? 'Excellent' : score >= 9 ? 'Good' : score >= 7 ? 'Fair' : 'Needs Work';
 
   return { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label };
 }
@@ -320,12 +603,17 @@ function formatDate(d) {
 }
 
 function renderSkeleton(repo) {
+  const info = REPO_META[repo] || { name: repo };
   return `
     <div class="repo-card skeleton">
       <div class="card-header">
-        <div class="repo-name">${repo}</div>
+        <div class="repo-name-block">
+          <div class="repo-name">${esc(info.name)}</div>
+          <div class="repo-slug">${esc(repo)}</div>
+        </div>
         <div class="health-badge badge-yellow">Checking…</div>
       </div>
+      <div class="skel-line" style="width:90%"></div>
       <div class="skel-line" style="width:80%"></div>
       <div class="skel-line" style="width:60%"></div>
       <div class="skel-line" style="width:70%"></div>
@@ -334,55 +622,80 @@ function renderSkeleton(repo) {
 
 function renderCard(data) {
   const { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label } = data;
+  const info      = REPO_META[repo] || { name: repo, desc: '' };
   const fillClass = `fill-${badge}`;
   const badgeClass = `badge-${badge}`;
-  const pct = Math.round((score / total) * 100);
+  const pct       = Math.round((score / total) * 100);
+  const repoUrl   = `https://github.com/${repo}`;
+  const pagesUrl  = `https://${repo.split('/')[0]}.github.io/${repo.split('/')[1]}/`;
 
-  const checkItems = Object.entries(checks).map(([name, pass]) => `
+  const checkItems = Object.entries(checks).map(([name, pass]) => {
+    const tip = CHECK_TOOLTIPS[name] ? makeTip(CHECK_TOOLTIPS[name]) : '';
+    return `
     <li>
       <span class="check-icon ${pass ? 'pass' : 'fail'}">${pass ? '✓' : '✗'}</span>
-      <span class="check-label">${name}</span>
-    </li>`).join('');
-
-  const repoUrl = `https://github.com/${repo}`;
-  const pagesUrl = `https://${repo.split('/')[0]}.github.io/${repo.split('/')[1]}/`;
+      <span class="check-label-wrap">
+        <span class="check-label">${esc(name)}</span>${tip}
+      </span>
+    </li>`;
+  }).join('');
 
   return `
     <div class="repo-card">
       <div class="card-header">
-        <div class="repo-name">
-          <a class="repo-link" href="${repoUrl}" target="_blank" rel="noopener">${repo}</a>
+        <div class="repo-name-block">
+          <div class="repo-name">
+            <a class="repo-link" href="${repoUrl}" target="_blank" rel="noopener">${esc(info.name)}</a>
+          </div>
+          <div class="repo-slug">${esc(repo)}</div>
         </div>
         <div class="health-badge ${badgeClass}">${label}</div>
       </div>
+      <p class="repo-desc">${esc(info.desc)}</p>
       <div class="score-row">
         <div class="score-bar-track">
           <div class="score-bar-fill ${fillClass}" style="width:${pct}%"></div>
         </div>
-        <div class="score-label">${score}/${total}</div>
+        <div class="score-label">
+          Health Score: ${score}/${total}
+          ${makeTip(SCORE_TOOLTIP, 'score-tip')}
+        </div>
+      </div>
+      <div class="score-legend">
+        <span class="legend-item"><span class="legend-dot teal"></span>11–12 Excellent</span>
+        <span class="legend-item"><span class="legend-dot green"></span>9–10 Good</span>
+        <span class="legend-item"><span class="legend-dot yellow"></span>7–8 Fair</span>
+        <span class="legend-item"><span class="legend-dot red"></span>&lt;7 Needs Work</span>
       </div>
       <ul class="checklist">${checkItems}</ul>
       <div class="card-meta">
-        <span><strong>Last build:</strong> <em class="commit-msg">${commitMsg}</em></span>
+        <span class="last-build-row">
+          <strong class="last-build-label">Last build:</strong>
+          <em class="commit-msg">${esc(commitMsg)}</em>
+        </span>
         <span><strong>Date:</strong> ${formatDate(commitDate)} (${daysSince}d ago)</span>
-        <span><strong>Open issues:</strong> ${meta.open_issues_count} &nbsp; <strong>Stars:</strong> ${meta.stargazers_count}</span>
-        <span><strong>Pages:</strong> <a href="${pagesUrl}" target="_blank" rel="noopener" style="color:var(--teal)">${pagesUrl}</a></span>
+        <span><strong>Issues:</strong> ${meta.open_issues_count} open &nbsp; <strong>Stars:</strong> ${meta.stargazers_count}</span>
+        <span><strong>Pages:</strong> <a href="${pagesUrl}" target="_blank" rel="noopener" style="color:var(--teal)">${esc(pagesUrl)}</a></span>
       </div>
     </div>`;
 }
 
 function renderError(repo, err) {
+  const info = REPO_META[repo] || { name: repo, desc: '' };
   const isRateLimit = err.status === 403;
   return `
     <div class="repo-card">
       <div class="card-header">
-        <div class="repo-name">${repo}</div>
+        <div class="repo-name-block">
+          <div class="repo-name">${esc(info.name)}</div>
+          <div class="repo-slug">${esc(repo)}</div>
+        </div>
         <div class="health-badge badge-red">Error</div>
       </div>
       <div class="error-card">
         ${isRateLimit
           ? '⚠️ GitHub API rate limit reached (60 req/hr for unauthenticated requests). Wait a minute and refresh.'
-          : `⚠️ Could not fetch data: ${err.message}`}
+          : `⚠️ Could not fetch data: ${esc(err.message)}`}
       </div>
     </div>`;
 }
@@ -395,10 +708,8 @@ async function runChecks() {
   btn.disabled = true;
   btn.textContent = '↻ Checking…';
 
-  // Show skeletons
   grid.innerHTML = REPOS.map(renderSkeleton).join('');
 
-  // Fetch all repos in parallel
   const results = await Promise.allSettled(REPOS.map(checkRepo));
 
   grid.innerHTML = results.map((r, i) =>
@@ -413,7 +724,42 @@ async function runChecks() {
   btn.textContent = '↻ Refresh';
 }
 
-// Auto-run on load
+/* ── PIN Gate ── */
+(function initPinGate() {
+  if (sessionStorage.getItem('pin_authenticated') === 'true') {
+    document.getElementById('pin-gate').style.display = 'none';
+    return;
+  }
+  var inp = document.getElementById('pin-input');
+  inp.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') checkPin();
+  });
+  // Auto-submit when 4 digits entered
+  inp.addEventListener('input', function () {
+    if (inp.value.length === 4) checkPin();
+  });
+})();
+
+function checkPin() {
+  var inp = document.getElementById('pin-input');
+  var err = document.getElementById('pin-error');
+  if (inp.value === '2026') {
+    sessionStorage.setItem('pin_authenticated', 'true');
+    document.getElementById('pin-gate').style.display = 'none';
+  } else {
+    err.textContent = 'Incorrect PIN — try again';
+    inp.classList.remove('shake');
+    void inp.offsetWidth; // force reflow for animation restart
+    inp.classList.add('shake');
+    inp.value = '';
+    inp.focus();
+    setTimeout(function () {
+      inp.classList.remove('shake');
+      err.textContent = '';
+    }, 1800);
+  }
+}
+
 runChecks();
 </script>
 </body>
