@@ -20,9 +20,11 @@
       --green:     #2ECC71;
       --yellow:    #F39C12;
       --red:       #E74C3C;
+      --orange:    #E67E22;
       --green-bg:  rgba(46,204,113,0.12);
       --yellow-bg: rgba(243,156,18,0.12);
       --red-bg:    rgba(231,76,60,0.12);
+      --orange-bg: rgba(230,126,34,0.12);
     }
 
     body {
@@ -60,8 +62,10 @@
       background: #12233a;
       border-bottom: 1px solid var(--card-border);
     }
+    .toolbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
     .last-checked { color: var(--muted); font-size: 0.88em; }
     .last-checked strong { color: var(--teal); }
+    .toolbar-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .refresh-btn {
       background: var(--teal);
       color: #0F1B2D;
@@ -75,6 +79,131 @@
     }
     .refresh-btn:hover { background: var(--teal-dim); }
     .refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+    .export-btn {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal);
+      padding: 8px 20px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .export-btn:hover { background: var(--teal-bg); }
+
+    /* ── Alerts Panel ── */
+    #alerts-panel {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+    .alerts-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .alerts-box.has-alerts { border-color: var(--orange); }
+    .alerts-box.all-clear  { border-color: var(--green); }
+    .alerts-heading {
+      font-size: 0.88em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .alerts-heading.warn { color: var(--orange); }
+    .alerts-heading.ok   { color: var(--green); }
+    .alert-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .alert-item {
+      font-size: 0.85em;
+      color: var(--white);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 6px 10px;
+      background: var(--orange-bg);
+      border-radius: 6px;
+      border-left: 3px solid var(--orange);
+    }
+    .alert-item.score-alert { background: var(--red-bg); border-left-color: var(--red); }
+    .alert-icon { flex-shrink: 0; }
+    .all-clear-msg { font-size: 0.88em; color: var(--green); }
+
+    /* ── Build History ── */
+    #history-section {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      padding: 0 24px;
+    }
+    .section-heading {
+      font-size: 0.88em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .history-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .history-repo-name {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .timeline { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 12px;
+      position: relative;
+    }
+    .timeline-item:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 16px;
+      bottom: 0;
+      width: 1px;
+      background: var(--card-border);
+    }
+    .timeline-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+      margin-top: 3px;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-content { min-width: 0; }
+    .timeline-msg {
+      font-size: 0.82em;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .timeline-date {
+      font-size: 0.74em;
+      color: var(--muted);
+      margin-top: 2px;
+    }
 
     /* ── Grid ── */
     .grid {
@@ -211,6 +340,34 @@
     }
     .check-label { flex: 1; }
 
+    /* ── Repo Stats Strip ── */
+    .repo-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-bottom: 12px;
+      padding: 8px 0 10px;
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 70px;
+    }
+    .stat-label {
+      font-size: 0.68em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .stat-value {
+      font-size: 0.88em;
+      font-weight: 700;
+      color: var(--white);
+    }
+
     /* ── Tooltips ── */
     .tip-wrap {
       position: relative;
@@ -334,6 +491,7 @@
       .grid { padding: 12px; gap: 12px; }
       .toolbar { padding: 12px; }
       .tip-text { width: 170px; }
+      #alerts-panel, #history-section { padding: 0 12px; }
     }
 
     /* ── PIN Gate ── */
@@ -442,8 +600,22 @@
 </header>
 
 <div class="toolbar">
-  <div class="last-checked">Last checked: <strong id="ts">—</strong></div>
-  <button class="refresh-btn" id="refreshBtn" onclick="runChecks()">↻ Refresh</button>
+  <div class="toolbar-left">
+    <div class="last-checked">Last checked: <strong id="ts">—</strong></div>
+  </div>
+  <div class="toolbar-actions">
+    <button class="export-btn" onclick="downloadReport()">↓ Download Report</button>
+    <button class="refresh-btn" id="refreshBtn" onclick="runChecks()">↻ Refresh</button>
+  </div>
+</div>
+
+<!-- Alerts Panel -->
+<div id="alerts-panel"></div>
+
+<!-- Build History -->
+<div id="history-section">
+  <div class="section-heading">Recent Activity — Build Timeline</div>
+  <div class="history-grid" id="history-grid"></div>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -451,6 +623,86 @@
 <footer>Quality Dashboard &nbsp;|&nbsp; Two Birds Innovation &nbsp;|&nbsp; Checks run against GitHub public API &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/roadmap.html" style="color:var(--teal);text-decoration:none;">View Roadmap →</a> &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/strategy.html" style="color:var(--teal);text-decoration:none;">Strategy Docs →</a></footer>
 
 <script>
+/* ─────────────────────────────────────────────────────────────────────────────
+   STATIC DATA — update these blocks manually after each sprint
+   Last updated: 2026-03-27
+───────────────────────────────────────────────────────────────────────────── */
+
+// Repo stats: file count, contributors, size estimate
+// Update these after checking each repo in GitHub
+const STATIC_REPO_STATS = {
+  'twobirds-kramerica/digital-confidence': {
+    fileCount: '~180 files',
+    contributors: 1,
+    sizeEst: '~4.2 MB'
+  },
+  'twobirds-kramerica/two-birds-innovation': {
+    fileCount: '~25 files',
+    contributors: 1,
+    sizeEst: '~1.1 MB'
+  },
+  'twobirds-kramerica/kevins-apartment-search': {
+    fileCount: '~40 files',
+    contributors: 1,
+    sizeEst: '~0.8 MB'
+  },
+  'twobirds-kramerica/career-coach': {
+    fileCount: '~30 files',
+    contributors: 1,
+    sizeEst: '~0.6 MB'
+  },
+  'twobirds-kramerica/quality-dashboard': {
+    fileCount: '~5 files',
+    contributors: 1,
+    sizeEst: '~0.1 MB'
+  },
+  'twobirds-kramerica/two-birds-portfolio': {
+    fileCount: '~15 files',
+    contributors: 1,
+    sizeEst: '~0.3 MB'
+  },
+  'twobirds-kramerica/two-birds-project-template': {
+    fileCount: '~10 files',
+    contributors: 1,
+    sizeEst: '~0.2 MB'
+  }
+};
+
+// Build history — last 5 commits per key repo
+// ISO date strings so relative time is calculated automatically
+// Update this block after each session
+const BUILD_HISTORY = {
+  'Digital Confidence Centre': [
+    { date: '2026-03-27', msg: 'feat: iA interview prep tool created' },
+    { date: '2026-03-27', msg: 'fix: Canadian English in final-quiz.js' },
+    { date: '2026-03-26', msg: 'feat: P3 prototype v0.1 — personal priority partner' },
+    { date: '2026-03-25', msg: 'feat: senior tech stars replaces comic corner' },
+    { date: '2026-03-24', msg: 'fix: translation covers nav and footer' }
+  ],
+  'Career Coach': [
+    { date: '2026-03-15', msg: 'feat: Phase 4 — coaching session modal added' },
+    { date: '2026-03-10', msg: 'fix: PDF export formatting on mobile' },
+    { date: '2026-03-05', msg: 'feat: add skills gap analysis section' },
+    { date: '2026-02-28', msg: 'fix: job fit score calculation edge cases' },
+    { date: '2026-02-20', msg: 'feat: initial career coach build' }
+  ],
+  'Quality Dashboard': [
+    { date: '2026-03-27', msg: 'feat: repo stats, build history, alerts panel, export' },
+    { date: '2026-03-20', msg: 'chore: quality dashboard sync — score updated to /15' },
+    { date: '2026-03-18', msg: 'feat: add two-birds-innovation to quality dashboard' },
+    { date: '2026-03-15', msg: 'feat: internal strategy summary page — PIN protected' },
+    { date: '2026-03-10', msg: 'feat: quality dashboard — friendly names, tooltips' }
+  ]
+};
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RUNTIME STATE — populated after runChecks() completes
+───────────────────────────────────────────────────────────────────────────── */
+let lastResults = [];
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   REPO DEFINITIONS
+───────────────────────────────────────────────────────────────────────────── */
 const REPOS = [
   'twobirds-kramerica/digital-confidence',
   'twobirds-kramerica/two-birds-innovation',
@@ -514,6 +766,9 @@ const SCORE_TOOLTIP = 'Counts how many of 15 build health checks this repo passe
 
 const API = 'https://api.github.com';
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────────────────────────────────────── */
 function esc(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -527,6 +782,93 @@ function makeTip(text, extraClass) {
   return `<span class="${cls}" tabindex="0"><i class="tip-icon" aria-label="More info" role="note">?</i><span class="tip-text">${esc(text)}</span></span>`;
 }
 
+// Convert a date string or Date object to a human-readable relative time
+function relativeTime(dateInput) {
+  const date = (dateInput instanceof Date) ? dateInput : new Date(dateInput);
+  if (isNaN(date)) return 'Unknown';
+  const diff = Math.floor((Date.now() - date) / 1000); // seconds
+  if (diff < 60)          return 'Just now';
+  if (diff < 3600)        return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400)       return `${Math.floor(diff / 3600)}h ago`;
+  const days = Math.floor(diff / 86400);
+  if (days < 30)          return `${days} day${days !== 1 ? 's' : ''} ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12)        return `${months} month${months !== 1 ? 's' : ''} ago`;
+  return `${Math.floor(months / 12)} year${Math.floor(months / 12) !== 1 ? 's' : ''} ago`;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BUILD HISTORY RENDER
+───────────────────────────────────────────────────────────────────────────── */
+function renderBuildHistory() {
+  const grid = document.getElementById('history-grid');
+  grid.innerHTML = Object.entries(BUILD_HISTORY).map(([repoName, commits]) => {
+    const items = commits.slice(0, 5).map(c => `
+      <li class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-msg">${esc(c.msg)}</div>
+          <div class="timeline-date">${relativeTime(c.date + 'T12:00:00')}</div>
+        </div>
+      </li>`).join('');
+    return `
+      <div class="history-card">
+        <div class="history-repo-name">${esc(repoName)}</div>
+        <ul class="timeline">${items}</ul>
+      </div>`;
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   ALERTS PANEL RENDER
+───────────────────────────────────────────────────────────────────────────── */
+function renderAlerts(results) {
+  const panel = document.getElementById('alerts-panel');
+  const alerts = [];
+
+  results.forEach(r => {
+    if (r.status !== 'fulfilled') return;
+    const d = r.value;
+    const info = REPO_META[d.repo] || { name: d.repo };
+    const scorePct = Math.round((d.score / d.total) * 100);
+
+    if (d.daysSince > 14) {
+      alerts.push({
+        type: 'stale',
+        msg: `${info.name} — no commit in ${d.daysSince} days (last: ${formatDate(d.commitDate)})`
+      });
+    }
+    if (scorePct < 70) {
+      alerts.push({
+        type: 'score',
+        msg: `${info.name} — health score below 70% (${scorePct}%, ${d.score}/${d.total})`
+      });
+    }
+  });
+
+  if (alerts.length === 0) {
+    panel.innerHTML = `
+      <div class="alerts-box all-clear">
+        <div class="alerts-heading ok">All Systems Healthy</div>
+        <div class="all-clear-msg">No staleness warnings or low health scores detected across all repos.</div>
+      </div>`;
+  } else {
+    const items = alerts.map(a => `
+      <li class="alert-item ${a.type === 'score' ? 'score-alert' : ''}">
+        <span class="alert-icon">${a.type === 'score' ? '▼' : '⏰'}</span>
+        <span>${esc(a.msg)}</span>
+      </li>`).join('');
+    panel.innerHTML = `
+      <div class="alerts-box has-alerts">
+        <div class="alerts-heading warn">⚠ ${alerts.length} Alert${alerts.length !== 1 ? 's' : ''} Detected</div>
+        <ul class="alert-list">${items}</ul>
+      </div>`;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   API HELPERS
+───────────────────────────────────────────────────────────────────────────── */
 async function fetchJSON(url) {
   const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
   if (!r.ok) throw Object.assign(new Error(r.statusText), { status: r.status });
@@ -560,6 +902,9 @@ async function fetchIndexHead(repo) {
   } catch { return ''; }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   REPO CHECK
+───────────────────────────────────────────────────────────────────────────── */
 async function checkRepo(repo) {
   const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots, hasPages, hasStrategy, indexHead, hasTips, hasSocial, hasGeo] = await Promise.all([
     fetchJSON(`${API}/repos/${repo}`),
@@ -604,13 +949,16 @@ async function checkRepo(repo) {
   };
 
   const score = Object.values(checks).filter(Boolean).length;
-  const total = Object.keys(checks).length; // 12
+  const total = Object.keys(checks).length;
   const badge = score >= 14 ? 'teal' : score >= 11 ? 'green' : score >= 8 ? 'yellow' : 'red';
   const label = score >= 14 ? 'Excellent' : score >= 11 ? 'Good' : score >= 8 ? 'Fair' : 'Needs Work';
 
   return { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label };
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   RENDER HELPERS
+───────────────────────────────────────────────────────────────────────────── */
 function formatDate(d) {
   if (!d) return 'Never';
   return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
@@ -637,6 +985,7 @@ function renderSkeleton(repo) {
 function renderCard(data) {
   const { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label } = data;
   const info      = REPO_META[repo] || { name: repo, desc: '' };
+  const stats     = STATIC_REPO_STATS[repo] || { fileCount: '—', contributors: '—', sizeEst: '—' };
   const fillClass = `fill-${badge}`;
   const badgeClass = `badge-${badge}`;
   const pct       = Math.round((score / total) * 100);
@@ -676,10 +1025,28 @@ function renderCard(data) {
         </div>
       </div>
       <div class="score-legend">
-        <span class="legend-item"><span class="legend-dot teal"></span>11–12 Excellent</span>
-        <span class="legend-item"><span class="legend-dot green"></span>9–10 Good</span>
-        <span class="legend-item"><span class="legend-dot yellow"></span>7–8 Fair</span>
-        <span class="legend-item"><span class="legend-dot red"></span>&lt;7 Needs Work</span>
+        <span class="legend-item"><span class="legend-dot teal"></span>14–15 Excellent</span>
+        <span class="legend-item"><span class="legend-dot green"></span>11–13 Good</span>
+        <span class="legend-item"><span class="legend-dot yellow"></span>8–10 Fair</span>
+        <span class="legend-item"><span class="legend-dot red"></span>&lt;8 Needs Work</span>
+      </div>
+      <div class="repo-stats">
+        <div class="stat-item">
+          <span class="stat-label">Files</span>
+          <span class="stat-value">${esc(stats.fileCount)}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Last Commit</span>
+          <span class="stat-value">${commitDate ? relativeTime(commitDate) : 'Never'}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Contributors</span>
+          <span class="stat-value">${esc(String(stats.contributors))}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Size</span>
+          <span class="stat-value">${esc(stats.sizeEst)}</span>
+        </div>
       </div>
       <ul class="checklist">${checkItems}</ul>
       <div class="card-meta">
@@ -714,19 +1081,87 @@ function renderError(repo, err) {
     </div>`;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   DOWNLOAD REPORT
+───────────────────────────────────────────────────────────────────────────── */
+function downloadReport() {
+  const ts = new Date().toISOString();
+  const repoSummaries = lastResults
+    .filter(r => r.status === 'fulfilled')
+    .map(r => {
+      const d = r.value;
+      const info = REPO_META[d.repo] || { name: d.repo };
+      const stats = STATIC_REPO_STATS[d.repo] || {};
+      const pct = Math.round((d.score / d.total) * 100);
+      const failedChecks = Object.entries(d.checks)
+        .filter(([, pass]) => !pass)
+        .map(([name]) => name);
+      return {
+        repo: d.repo,
+        name: info.name,
+        label: d.label,
+        score: `${d.score}/${d.total} (${pct}%)`,
+        lastCommit: d.commitDate ? d.commitDate.toISOString() : null,
+        daysSinceCommit: d.daysSince,
+        lastCommitMsg: d.commitMsg,
+        openIssues: d.meta.open_issues_count,
+        stars: d.meta.stargazers_count,
+        fileCount: stats.fileCount || '—',
+        contributors: stats.contributors || '—',
+        sizeEst: stats.sizeEst || '—',
+        failedChecks
+      };
+    });
+
+  const errors = lastResults
+    .filter(r => r.status === 'rejected')
+    .map((r, i) => ({ repo: REPOS[i], error: r.reason.message }));
+
+  const report = {
+    generatedAt: ts,
+    dashboard: 'Two Birds Innovation — Quality Dashboard',
+    totalRepos: REPOS.length,
+    successfulChecks: repoSummaries.length,
+    errors: errors.length,
+    repos: repoSummaries,
+    errorDetails: errors
+  };
+
+  const json = JSON.stringify(report, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `quality-report-${ts.slice(0, 10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MAIN — RUN CHECKS
+───────────────────────────────────────────────────────────────────────────── */
 async function runChecks() {
   const grid = document.getElementById('grid');
   const btn  = document.getElementById('refreshBtn');
   const ts   = document.getElementById('ts');
+  const alertsPanel = document.getElementById('alerts-panel');
 
   btn.disabled = true;
   btn.textContent = '↻ Checking…';
 
+  // Show loading state in alerts panel
+  alertsPanel.innerHTML = `
+    <div class="alerts-box">
+      <div class="alerts-heading" style="color:var(--muted)">Checking repos…</div>
+    </div>`;
+
   grid.innerHTML = REPOS.map(renderSkeleton).join('');
 
-  const results = await Promise.allSettled(REPOS.map(checkRepo));
+  lastResults = await Promise.allSettled(REPOS.map(checkRepo));
 
-  grid.innerHTML = results.map((r, i) =>
+  grid.innerHTML = lastResults.map((r, i) =>
     r.status === 'fulfilled' ? renderCard(r.value) : renderError(REPOS[i], r.reason)
   ).join('');
 
@@ -734,11 +1169,15 @@ async function runChecks() {
     dateStyle: 'medium', timeStyle: 'short'
   });
 
+  renderAlerts(lastResults);
+
   btn.disabled = false;
   btn.textContent = '↻ Refresh';
 }
 
-/* ── PIN Gate ── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   PIN GATE
+───────────────────────────────────────────────────────────────────────────── */
 (function initPinGate() {
   if (sessionStorage.getItem('pin_authenticated') === 'true') {
     document.getElementById('pin-gate').style.display = 'none';
@@ -748,7 +1187,6 @@ async function runChecks() {
   inp.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') checkPin();
   });
-  // Auto-submit when 4 digits entered
   inp.addEventListener('input', function () {
     if (inp.value.length === 4) checkPin();
   });
@@ -763,7 +1201,7 @@ function checkPin() {
   } else {
     err.textContent = 'Incorrect PIN — try again';
     inp.classList.remove('shake');
-    void inp.offsetWidth; // force reflow for animation restart
+    void inp.offsetWidth;
     inp.classList.add('shake');
     inp.value = '';
     inp.focus();
@@ -774,6 +1212,10 @@ function checkPin() {
   }
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────────────────────────────────────── */
+renderBuildHistory();
 runChecks();
 </script>
 </body>
