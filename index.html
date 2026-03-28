@@ -269,6 +269,7 @@
     .badge-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green); }
     .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow); }
     .badge-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red); }
+    .badge-orange { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange); }
 
     /* Score bar */
     .score-row {
@@ -494,6 +495,112 @@
       #alerts-panel, #history-section { padding: 0 12px; }
     }
 
+    /* ── Portfolio Value Section ── */
+    #portfolio-section {
+      max-width: 1200px;
+      margin: 28px auto 0;
+      padding: 0 24px;
+    }
+    .portfolio-details {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .portfolio-details summary {
+      padding: 16px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 700;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      list-style: none;
+    }
+    .portfolio-details summary::-webkit-details-marker { display: none; }
+    .portfolio-details summary::after {
+      content: '▸';
+      margin-left: auto;
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .portfolio-details[open] summary::after { transform: rotate(90deg); }
+    .portfolio-details summary:hover { background: rgba(255,255,255,0.04); }
+    .portfolio-inner { padding: 0 20px 20px; }
+    .portfolio-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88em;
+      margin: 14px 0;
+    }
+    .portfolio-table th {
+      text-align: left;
+      padding: 8px 12px;
+      background: #12233a;
+      color: var(--teal);
+      font-size: 0.78em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .portfolio-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--white);
+      vertical-align: top;
+    }
+    .portfolio-table tr:last-child td { border-bottom: none; }
+    .portfolio-table td:first-child { font-weight: 600; }
+    .portfolio-table td.mrr { color: var(--muted); font-style: italic; }
+    .portfolio-table td.potential { color: var(--green); font-weight: 600; }
+    .portfolio-table td.timeline { color: var(--yellow); font-size: 0.85em; }
+    .portfolio-summary {
+      background: #12233a;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 0.88em;
+      color: var(--white);
+      margin-top: 6px;
+    }
+    .portfolio-summary strong { color: var(--teal); }
+    .portfolio-disclaimer {
+      font-size: 0.78em;
+      color: var(--muted);
+      margin-top: 10px;
+      font-style: italic;
+    }
+
+    /* ── Revenue Timeline Cards ── */
+    .revenue-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .revenue-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .revenue-card-label {
+      font-size: 0.72em;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .revenue-card-label.fast   { color: var(--green); }
+    .revenue-card-label.mid    { color: var(--yellow); }
+    .revenue-card-label.long   { color: var(--orange); }
+    .revenue-card-body {
+      font-size: 0.88em;
+      color: var(--white);
+      line-height: 1.5;
+    }
+
     /* ── PIN Gate ── */
     #pin-gate {
       position: fixed;
@@ -620,6 +727,71 @@
 
 <div class="grid" id="grid"></div>
 
+<!-- Portfolio Value Estimate -->
+<div id="portfolio-section">
+  <details class="portfolio-details">
+    <summary>🔒 Portfolio Value Estimate</summary>
+    <div class="portfolio-inner">
+      <table class="portfolio-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Current MRR</th>
+            <th>Potential (per client/user)</th>
+            <th>Timeline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DCC White-Label</td>
+            <td class="mrr">$0</td>
+            <td class="potential">$15,000/year per client</td>
+            <td class="timeline">2–3 months</td>
+          </tr>
+          <tr>
+            <td>Career Coach Pro</td>
+            <td class="mrr">$0</td>
+            <td class="potential">$10/user/month</td>
+            <td class="timeline">3–4 months</td>
+          </tr>
+          <tr>
+            <td>Clarity Consulting</td>
+            <td class="mrr">$0</td>
+            <td class="potential">Lead gen → consultation</td>
+            <td class="timeline">1 month</td>
+          </tr>
+          <tr>
+            <td>Consulting Retainers</td>
+            <td class="mrr">$0</td>
+            <td class="potential">$4,000/month per client</td>
+            <td class="timeline">Immediate</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="portfolio-summary">
+        <strong>Current MRR:</strong> $0 &nbsp;|&nbsp;
+        <strong>At 1 retainer client:</strong> $4,000/month &nbsp;|&nbsp;
+        <strong>At 2 retainer + 1 DCC partner:</strong> $19,000/month
+      </div>
+      <div class="revenue-timeline">
+        <div class="revenue-card">
+          <div class="revenue-card-label fast">Fastest Path</div>
+          <div class="revenue-card-body">Consulting retainer — can sign within weeks</div>
+        </div>
+        <div class="revenue-card">
+          <div class="revenue-card-label mid">Mid-Term</div>
+          <div class="revenue-card-body">Clarity → consultation conversions — 1 month</div>
+        </div>
+        <div class="revenue-card">
+          <div class="revenue-card-label long">Longest Runway</div>
+          <div class="revenue-card-body">DCC white-label B2B — 2–3 month sales cycle</div>
+        </div>
+      </div>
+      <p class="portfolio-disclaimer">This is a motivational projection, not financial advice.</p>
+    </div>
+  </details>
+</div>
+
 <footer>Quality Dashboard &nbsp;|&nbsp; Two Birds Innovation &nbsp;|&nbsp; Checks run against GitHub public API &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/roadmap.html" style="color:var(--teal);text-decoration:none;">View Roadmap →</a> &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/strategy.html" style="color:var(--teal);text-decoration:none;">Strategy Docs →</a></footer>
 
 <script>
@@ -729,6 +901,14 @@ let lastResults = [];
 /* ─────────────────────────────────────────────────────────────────────────────
    REPO DEFINITIONS
 ───────────────────────────────────────────────────────────────────────────── */
+// Repos that exist locally only — no GitHub remote yet.
+// These are rendered with an orange "Local — awaiting push" badge
+// and skip all GitHub API checks.
+const LOCAL_ONLY_REPOS = new Set([
+  'twobirds-kramerica/clarity',
+  'twobirds-kramerica/aaron-patzalek'
+]);
+
 const REPOS = [
   'twobirds-kramerica/digital-confidence',
   'twobirds-kramerica/two-birds-innovation',
@@ -1005,6 +1185,51 @@ function formatDate(d) {
   return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+function renderLocalCard(repo) {
+  const info  = REPO_META[repo] || { name: repo, desc: '' };
+  const stats = STATIC_REPO_STATS[repo] || { fileCount: '—', contributors: '—', sizeEst: '—' };
+  const history = BUILD_HISTORY[info.name] || [];
+  const lastMsg = history.length ? history[0].msg : 'No build history recorded';
+  const lastDate = history.length ? history[0].date : null;
+  return `
+    <div class="repo-card" style="border-color:var(--orange)">
+      <div class="card-header">
+        <div class="repo-name-block">
+          <div class="repo-name">${esc(info.name)}</div>
+          <div class="repo-slug">${esc(repo)}</div>
+        </div>
+        <div class="health-badge badge-orange">Local — awaiting push</div>
+      </div>
+      <p class="repo-desc">${esc(info.desc)}</p>
+      <div class="repo-stats">
+        <div class="stat-item">
+          <span class="stat-label">Files</span>
+          <span class="stat-value">${esc(stats.fileCount)}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Remote</span>
+          <span class="stat-value" style="color:var(--orange)">Not pushed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Contributors</span>
+          <span class="stat-value">${esc(String(stats.contributors))}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Size</span>
+          <span class="stat-value">${esc(stats.sizeEst)}</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        <span class="last-build-row">
+          <strong class="last-build-label">Last build:</strong>
+          <em class="commit-msg">${esc(lastMsg)}</em>
+        </span>
+        ${lastDate ? `<span><strong>Date:</strong> ${lastDate}</span>` : ''}
+        <span style="color:var(--orange);font-size:0.82em;">⚠ No GitHub remote — health checks skipped until pushed</span>
+      </div>
+    </div>`;
+}
+
 function renderSkeleton(repo) {
   const info = REPO_META[repo] || { name: repo };
   return `
@@ -1200,11 +1425,20 @@ async function runChecks() {
 
   grid.innerHTML = REPOS.map(renderSkeleton).join('');
 
-  lastResults = await Promise.allSettled(REPOS.map(checkRepo));
+  const remoteRepos = REPOS.filter(r => !LOCAL_ONLY_REPOS.has(r));
+  const remoteResults = await Promise.allSettled(remoteRepos.map(checkRepo));
 
-  grid.innerHTML = lastResults.map((r, i) =>
-    r.status === 'fulfilled' ? renderCard(r.value) : renderError(REPOS[i], r.reason)
-  ).join('');
+  // Build a result map keyed by repo slug for easy lookup
+  const resultMap = {};
+  remoteRepos.forEach((repo, i) => { resultMap[repo] = remoteResults[i]; });
+
+  lastResults = remoteResults; // used by alerts + download report
+
+  grid.innerHTML = REPOS.map(repo => {
+    if (LOCAL_ONLY_REPOS.has(repo)) return renderLocalCard(repo);
+    const r = resultMap[repo];
+    return r.status === 'fulfilled' ? renderCard(r.value) : renderError(repo, r.reason);
+  }).join('');
 
   ts.textContent = new Date().toLocaleString('en-CA', {
     dateStyle: 'medium', timeStyle: 'short'
