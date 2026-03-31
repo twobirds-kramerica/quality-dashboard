@@ -478,6 +478,103 @@
       margin-top: 8px;
     }
 
+    /* ── HAL Stack Section ── */
+    #hal-section {
+      max-width: 1200px;
+      margin: 28px auto 0;
+      padding: 0 24px;
+    }
+    .hal-heading {
+      font-size: 0.88em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+    .hal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .hal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .hal-card-title {
+      font-size: 0.82em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--teal);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .hal-status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.82em;
+    }
+    .hal-status-row:last-child { border-bottom: none; }
+    .hal-status-label { color: var(--white); }
+    .hal-badge {
+      font-size: 0.72em;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .hal-badge.ok { background: rgba(0,201,167,0.15); color: var(--green); }
+    .hal-badge.pending { background: rgba(245,166,35,0.12); color: var(--orange); }
+    .hal-badge.offline { background: rgba(200,200,200,0.1); color: var(--muted); }
+    .hal-sprint-item {
+      font-size: 0.8em;
+      color: var(--white);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--card-border);
+      line-height: 1.5;
+    }
+    .hal-sprint-item:last-child { border-bottom: none; }
+    .hal-sprint-tag {
+      display: inline-block;
+      font-size: 0.68em;
+      background: rgba(0,201,167,0.12);
+      color: var(--teal);
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-right: 4px;
+      font-weight: 700;
+    }
+    .prompt-queue-indicator {
+      text-align: center;
+      padding: 12px;
+    }
+    .prompt-queue-count {
+      font-size: 2em;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .prompt-queue-label {
+      font-size: 0.75em;
+      color: var(--muted);
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .prompt-queue-note {
+      font-size: 0.73em;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
     /* ── Footer ── */
     footer {
       text-align: center;
@@ -790,6 +887,118 @@
       <p class="portfolio-disclaimer">This is a motivational projection, not financial advice.</p>
     </div>
   </details>
+</div>
+
+<!-- HAL Stack Integration Panel -->
+<div id="hal-section">
+  <div class="hal-heading">🤖 HAL Stack — AI Development Server Status</div>
+  <div class="hal-grid">
+
+    <!-- Component Status -->
+    <div class="hal-card">
+      <div class="hal-card-title">⚙️ Component Status</div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Claude Code CLI</span>
+        <span class="hal-badge ok">✅ Operational</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">GitHub Actions (DCC)</span>
+        <span class="hal-badge ok">✅ 15 workflows</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">GitHub Pages</span>
+        <span class="hal-badge ok">✅ Live</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">n8n Automation</span>
+        <span class="hal-badge pending">⏳ April 2026</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">LightRAG (Knowledge)</span>
+        <span class="hal-badge pending">⏳ May 2026</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">SQLite Prompt DB</span>
+        <span class="hal-badge pending">⏳ With n8n</span>
+      </div>
+    </div>
+
+    <!-- Machine Status -->
+    <div class="hal-card">
+      <div class="hal-card-title">💻 Machine Status</div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">i5 Lenovo (Primary)</span>
+        <span class="hal-badge ok">✅ Online</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Brenda's iPad (QA)</span>
+        <span class="hal-badge ok">✅ Available</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Remote Access (OpenCode)</span>
+        <span class="hal-badge pending">⏳ Pending</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Cloudflare Tunnel</span>
+        <span class="hal-badge pending">⏳ Pending</span>
+      </div>
+      <div style="margin-top:10px;font-size:0.74em;color:var(--muted);line-height:1.5;">
+        i5-6200U · 8GB RAM · 238GB SSD<br>
+        Claude Code v2.1.88 · Node v24.14.1<br>
+        Windows 10 Pro · GMT-5 (EST)
+      </div>
+    </div>
+
+    <!-- Prompt Queue -->
+    <div class="hal-card">
+      <div class="hal-card-title">📬 Prompt Queue</div>
+      <div class="prompt-queue-indicator">
+        <div class="prompt-queue-count" id="hal-queue-count">?</div>
+        <div class="prompt-queue-label">Gmail Drafts with ⏳ Prefix</div>
+        <div class="prompt-queue-note">
+          Check Gmail: search <code>subject:⏳</code><br>
+          n8n automation pending — manual tracking until April 2026
+        </div>
+      </div>
+      <div class="hal-status-row" style="margin-top:8px;">
+        <span class="hal-status-label">Tracking Method</span>
+        <span class="hal-badge pending">Manual (Gmail)</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Target Method</span>
+        <span class="hal-badge pending">n8n + SQLite</span>
+      </div>
+    </div>
+
+    <!-- Next HAL Sprint -->
+    <div class="hal-card">
+      <div class="hal-card-title">🚀 Next HAL Sprint</div>
+      <div class="hal-sprint-item">
+        <span class="hal-sprint-tag">April</span>
+        Install n8n on i5 Lenovo (port 5678)
+      </div>
+      <div class="hal-sprint-item">
+        <span class="hal-sprint-tag">April</span>
+        Set up Cloudflare Tunnel for GitHub webhooks
+      </div>
+      <div class="hal-sprint-item">
+        <span class="hal-sprint-tag">April</span>
+        Connect n8n → Gmail → SQLite prompt queue
+      </div>
+      <div class="hal-sprint-item">
+        <span class="hal-sprint-tag">April</span>
+        Test build-completion webhook (GitHub → n8n)
+      </div>
+      <div class="hal-sprint-item">
+        <span class="hal-sprint-tag">May</span>
+        Install LightRAG + DCC repo ingestion
+      </div>
+      <div style="margin-top:10px;font-size:0.72em;color:var(--muted);">
+        Full roadmap: <a href="https://github.com/twobirds-kramerica/two-birds-portfolio/tree/master/hal-stack" style="color:var(--teal);text-decoration:none;" target="_blank">hal-stack/ →</a>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <footer>Quality Dashboard &nbsp;|&nbsp; Two Birds Innovation &nbsp;|&nbsp; Checks run against GitHub public API &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/roadmap.html" style="color:var(--teal);text-decoration:none;">View Roadmap →</a> &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/strategy.html" style="color:var(--teal);text-decoration:none;">Strategy Docs →</a></footer>
