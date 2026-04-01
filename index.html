@@ -801,6 +801,7 @@
 <header class="header">
   <h1>Two Birds Innovation — <span>Build Quality Dashboard</span></h1>
   <p>Automated health checks across all active repositories</p>
+  <p style="color:var(--teal);font-size:0.88em;margin-top:8px;font-weight:600;">6 repos live on GitHub Pages &nbsp;|&nbsp; 1 pending activation (clarity)</p>
 </header>
 
 <div class="toolbar">
@@ -823,6 +824,124 @@
 </div>
 
 <div class="grid" id="grid"></div>
+
+<!-- GitHub Pages Deployment Status -->
+<div style="max-width:1200px;margin:28px auto 0;padding:0 24px;">
+  <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:20px;">
+    <div class="section-heading" style="margin-bottom:14px;">GitHub Pages — Live Deployments</div>
+    <table class="portfolio-table" style="margin:0;">
+      <thead>
+        <tr>
+          <th>Repo</th>
+          <th>Status</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>digital-confidence</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/digital-confidence/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/digital-confidence/</a></td>
+        </tr>
+        <tr>
+          <td>career-coach</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/career-coach/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/career-coach/</a></td>
+        </tr>
+        <tr>
+          <td>kevins-apartment-search</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/kevins-apartment-search/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/kevins-apartment-search/</a></td>
+        </tr>
+        <tr>
+          <td>quality-dashboard</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/quality-dashboard/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/quality-dashboard/</a></td>
+        </tr>
+        <tr>
+          <td>aaron-patzalek</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/aaron-patzalek/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/aaron-patzalek/</a></td>
+        </tr>
+        <tr>
+          <td>two-birds-innovation</td>
+          <td><span style="color:var(--green);font-weight:700;">Live</span></td>
+          <td><a href="https://twobirds-kramerica.github.io/two-birds-innovation/" target="_blank" rel="noopener" style="color:var(--teal);text-decoration:none;">twobirds-kramerica.github.io/two-birds-innovation/</a></td>
+        </tr>
+        <tr>
+          <td>clarity</td>
+          <td><span style="color:var(--yellow);font-weight:700;">Pending</span></td>
+          <td style="color:var(--muted);font-style:italic;">Pages activation pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- GitHub Actions Health -->
+<div style="max-width:1200px;margin:28px auto 0;padding:0 24px;">
+  <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:20px;">
+    <div class="section-heading" style="margin-bottom:14px;">GitHub Actions Health — DCC Workflows</div>
+    <table class="portfolio-table" style="margin:0;">
+      <thead>
+        <tr>
+          <th>Workflow</th>
+          <th>Status</th>
+          <th>Trigger</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Content Count Report</td>
+          <td><span style="color:var(--green);font-weight:700;">Fixed</span></td>
+          <td>Manual only</td>
+        </tr>
+        <tr>
+          <td>Sitemap Validator</td>
+          <td><span style="color:var(--green);font-weight:700;">Fixed</span></td>
+          <td>Manual only</td>
+        </tr>
+        <tr>
+          <td>Update Sitemap Dates</td>
+          <td><span style="color:var(--green);font-weight:700;">Fixed</span></td>
+          <td>Manual only</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="color:var(--muted);font-size:0.82em;margin-top:12px;font-style:italic;">Changed from push triggers to workflow_dispatch only — March 31, 2026. No longer generates failure emails.</p>
+  </div>
+</div>
+
+<!-- Next Sprint -->
+<div style="max-width:1200px;margin:28px auto 0;padding:0 24px;">
+  <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:20px;">
+    <div class="section-heading" style="margin-bottom:14px;">Next Sprint — April 2026</div>
+    <ol style="list-style:none;counter-reset:sprint;margin:0;padding:0;">
+      <li style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--card-border);">
+        <span style="background:var(--teal-bg);color:var(--teal);font-weight:700;font-size:0.82em;padding:4px 10px;border-radius:6px;flex-shrink:0;">1</span>
+        <div>
+          <div style="color:var(--white);font-size:0.92em;font-weight:600;">n8n install + basic prompt tracking workflow (HAL)</div>
+          <div style="color:var(--muted);font-size:0.78em;margin-top:2px;">Self-hosted automation server with initial AI prompt logging</div>
+        </div>
+      </li>
+      <li style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--card-border);">
+        <span style="background:var(--teal-bg);color:var(--teal);font-weight:700;font-size:0.82em;padding:4px 10px;border-radius:6px;flex-shrink:0;">2</span>
+        <div>
+          <div style="color:var(--white);font-size:0.92em;font-weight:600;">LightRAG install and DCC ingest (HAL intelligence)</div>
+          <div style="color:var(--muted);font-size:0.78em;margin-top:2px;">Knowledge graph for DCC content — retrieval-augmented generation</div>
+        </div>
+      </li>
+      <li style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;">
+        <span style="background:var(--teal-bg);color:var(--teal);font-weight:700;font-size:0.82em;padding:4px 10px;border-radius:6px;flex-shrink:0;">3</span>
+        <div>
+          <div style="color:var(--white);font-size:0.92em;font-weight:600;">Google Search Console verification + sitemap submission</div>
+          <div style="color:var(--muted);font-size:0.78em;margin-top:2px;">SEO foundation — verify DCC domain and submit sitemap for indexing</div>
+        </div>
+      </li>
+    </ol>
+    <p style="color:var(--muted);font-size:0.78em;margin-top:12px;font-style:italic;">Source: APRIL-2026-SPRINT-PLAN.md in two-birds-portfolio repo</p>
+  </div>
+</div>
 
 <!-- Portfolio Value Estimate -->
 <div id="portfolio-section">
@@ -1115,7 +1234,8 @@ let lastResults = [];
 // and skip all GitHub API checks.
 const LOCAL_ONLY_REPOS = new Set([
   'twobirds-kramerica/clarity',
-  'twobirds-kramerica/aaron-patzalek'
+  'twobirds-kramerica/aaron-patzalek',
+  'twobirds-kramerica/two-birds-innovation'
 ]);
 
 const REPOS = [
