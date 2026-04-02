@@ -1188,29 +1188,27 @@ const STATIC_REPO_STATS = {
 // Update this block after each session
 const BUILD_HISTORY = {
   'Digital Confidence Centre': [
-    { date: '2026-03-28', msg: 'feat: GitHub Actions — monthly business report and weekly LinkedIn reminder' },
-    { date: '2026-03-28', msg: 'feat: search — analytics logging, did-you-mean, admin dashboard (PIN 2026)' },
-    { date: '2026-03-28', msg: 'feat: accessibility — reading guide, high contrast, text spacing + settings page' },
-    { date: '2026-03-28', msg: 'feat: B2B outreach email sequences — 5 sequences, 19 emails total' },
-    { date: '2026-03-28', msg: 'fix: technical debt — storage keys, utils helpers, module count 15→19' }
+    { date: '2026-04-01', msg: 'feat: LinkedIn content system — 8 posts ready, profile optimisation guide' },
+    { date: '2026-03-31', msg: 'feat: newsletter and sharing system, B2B outreach dashboard' },
+    { date: '2026-03-31', msg: 'fix: complete health audit — meta, broken links, service worker, Canadian English' },
+    { date: '2026-03-28', msg: 'feat: modules 18-19, B2B emails, GitHub Actions, quiz ecosystem' },
+    { date: '2026-03-27', msg: 'feat: AEO 30 pages, scam ecosystem, white label, accessibility AAA' }
   ],
   'Career Coach': [
-    { date: '2026-03-28', msg: 'feat: career coach final polish — market insights, export, templates' },
-    { date: '2026-03-28', msg: 'feat: career coach — demo card, keyboard shortcuts, history, mobile' },
-    { date: '2026-03-28', msg: 'feat: career coach — typography, logo, hero, voice input, French' },
-    { date: '2026-03-28', msg: 'feat: Career Coach v1.0 — AI job application tool with scoring' },
-    { date: '2026-03-15', msg: 'feat: Phase 4 — coaching session modal added' }
-  ],
-  'Aaron Kramer': [
-    { date: '2026-03-28', msg: 'feat: personal brand site — hero, projects, background, contact' }
+    { date: '2026-04-02', msg: 'feat: Strengthen My CV — AI analyses CV against job posting' },
+    { date: '2026-04-02', msg: 'feat: LLM portability layer — 3 API calls migrated to llm-provider.js' },
+    { date: '2026-04-02', msg: 'feat: JSON export, privacy notice, product roadmap' },
+    { date: '2026-03-31', msg: 'feat: job stats card, print jobs, mission-driven cover letter' },
+    { date: '2026-03-28', msg: 'feat: Career Coach v1.0 — AI job application tool with scoring' }
   ],
   'Clarity': [
-    { date: '2026-03-28', msg: 'feat: Clarity rebuilt — correct SME diagnostic spec with SWOT and lead capture' },
-    { date: '2026-03-28', msg: 'feat: Clarity v1.0 — initial build (journalling tool — superseded)' }
+    { date: '2026-04-02', msg: 'feat: LLM portability layer — API call migrated to llm-provider.js' },
+    { date: '2026-04-01', msg: 'feat: Clarity full build — improved form, SWOT grid, quick wins, CTA' },
+    { date: '2026-03-31', msg: 'feat: Clarity AI business diagnostic — initial build' }
   ],
-  'Aaron Patzalek Consulting': [
-    { date: '2026-03-28', msg: 'fix: correct pricing ($2,500 audit, $4,000/month fractional) and name' },
-    { date: '2026-03-28', msg: 'feat: consulting site — services, rates, contact' }
+  'Aaron Patzalek': [
+    { date: '2026-04-01', msg: 'feat: full personal brand site — story, projects, contact details' },
+    { date: '2026-03-31', msg: 'feat: site final — pricing, proof of work, availability, mobile' }
   ],
   'Quality Dashboard': [
     { date: '2026-03-27', msg: 'feat: repo stats, build history, alerts panel, export' },
@@ -1218,6 +1216,18 @@ const BUILD_HISTORY = {
     { date: '2026-03-18', msg: 'feat: add two-birds-innovation to quality dashboard' },
     { date: '2026-03-15', msg: 'feat: internal strategy summary page — PIN protected' },
     { date: '2026-03-10', msg: 'feat: quality dashboard — friendly names, tooltips' }
+  ],
+  'Two Birds Innovation': [
+    { date: '2026-04-02', msg: 'feat: Kevin\'s Apt tool card, Work With Aaron section' },
+    { date: '2026-04-01', msg: 'feat: full company site — problem section, 3 tools, Why Two Birds' }
+  ],
+  'Command Centre': [
+    { date: '2026-04-02', msg: 'feat: language bank V2 — Wait For Native, 7 new code words' },
+    { date: '2026-04-01', msg: 'feat: journey timeline — visual commit density chart' },
+    { date: '2026-04-01', msg: 'feat: prompt library + language bank pages' }
+  ],
+  'Elite Karate Site': [
+    { date: '2026-04-02', msg: 'feat: polished — classes, schedule, contact, mobile nav, Canadian English' }
   ]
 };
 
@@ -1233,9 +1243,7 @@ let lastResults = [];
 // These are rendered with an orange "Local — awaiting push" badge
 // and skip all GitHub API checks.
 const LOCAL_ONLY_REPOS = new Set([
-  'twobirds-kramerica/clarity',
-  'twobirds-kramerica/aaron-patzalek',
-  'twobirds-kramerica/two-birds-innovation'
+  // All repos now pushed to GitHub — none are local-only as of April 2, 2026
 ]);
 
 const REPOS = [
@@ -1246,9 +1254,10 @@ const REPOS = [
   'twobirds-kramerica/two-birds-project-template',
   'twobirds-kramerica/career-coach',
   'twobirds-kramerica/quality-dashboard',
-  'twobirds-kramerica/aaron-kramer',
   'twobirds-kramerica/clarity',
-  'twobirds-kramerica/aaron-patzalek'
+  'twobirds-kramerica/aaron-patzalek',
+  'twobirds-kramerica/elite-karate-site',
+  'twobirds-kramerica/two-birds-command-centre'
 ];
 
 const REPO_META = {
@@ -1291,6 +1300,14 @@ const REPO_META = {
   'twobirds-kramerica/aaron-patzalek': {
     name: 'Aaron Patzalek Consulting',
     desc: 'Consulting site for Aaron Patzalek: product strategy, discovery, team coaching, advisory. Services and rates.'
+  },
+  'twobirds-kramerica/elite-karate-site': {
+    name: 'Elite Karate Site',
+    desc: 'Client project for Kirk\'s Elite Karate Club, St. Thomas. Classes, schedule, contact, mobile nav. Awaiting client review.'
+  },
+  'twobirds-kramerica/two-birds-command-centre': {
+    name: 'Command Centre',
+    desc: 'Operations dashboard: vault, inbox, decisions, language bank, prompt library, journey timeline.'
   }
 };
 
