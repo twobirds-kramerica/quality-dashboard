@@ -1,0 +1,4 @@
+# Quality Dashboard is an internal portfolio monitoring tool.
+# Not indexable per threat model; page also sets <meta name=robots content=noindex>.
+User-agent: *
+Disallow: /
