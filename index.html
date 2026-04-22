@@ -52,6 +52,29 @@
     }
     .skip-link:focus { top: 0; outline: 3px solid var(--white); outline-offset: 2px; }
 
+    /* Explicit :focus-visible for dark-theme keyboard a11y.
+       Default browser focus ring washes out against the navy
+       background. Teal + white outline is AA-contrast on every
+       surface used in this dashboard.
+       (WCAG 2.4.7 Focus Visible, 2.4.11 Focus Not Obscured) */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+    /* Suppress default :focus when :focus-visible isn't matched
+       (prevents the ring from showing on mouse click).
+       Inputs keep the existing teal border-color on focus. */
+    button:focus:not(:focus-visible),
+    a:focus:not(:focus-visible) {
+      outline: none;
+    }
+
     /* ── Header ── */
     .header {
       background: linear-gradient(135deg, #0a1520 0%, #1A2D44 100%);
