@@ -1478,38 +1478,77 @@ function renderAlerts(results) {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   API HELPERS
+   API HELPERS — with 60s sessionStorage cache to stay under GitHub's
+   unauthenticated rate limit (60/hour per IP) on refresh-heavy days.
 ───────────────────────────────────────────────────────────────────────────── */
+const CACHE_TTL_MS = 60_000;
+const CACHE_NS     = 'qd-cache:';
+
+function cacheGet(key) {
+  try {
+    const raw = sessionStorage.getItem(CACHE_NS + key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || Date.now() - parsed.ts > CACHE_TTL_MS) return null;
+    return parsed.data;
+  } catch { return null; }
+}
+
+function cacheSet(key, data) {
+  try {
+    sessionStorage.setItem(CACHE_NS + key, JSON.stringify({ ts: Date.now(), data }));
+  } catch {}  // quota exceeded / private-mode / etc. — silently skip
+}
+
 async function fetchJSON(url) {
+  const hit = cacheGet('json:' + url);
+  if (hit !== null) return hit;
   const r = await fetch(url, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
   if (!r.ok) throw Object.assign(new Error(r.statusText), { status: r.status });
-  return r.json();
+  const data = await r.json();
+  cacheSet('json:' + url, data);
+  return data;
 }
 
 async function fileExists(repo, path) {
+  const key = 'exists:' + repo + ':' + path;
+  const hit = cacheGet(key);
+  if (hit !== null) return hit;
   try {
     const r = await fetch(`${API}/repos/${repo}/contents/${path}`, {
       headers: { 'Accept': 'application/vnd.github.v3+json' }
     });
-    return r.status === 200;
+    const ok = (r.status === 200);
+    cacheSet(key, ok);
+    return ok;
   } catch { return false; }
 }
 
 async function pagesEnabled(repo) {
+  const key = 'pages:' + repo;
+  const hit = cacheGet(key);
+  if (hit !== null) return hit;
   try {
     const r = await fetch(`${API}/repos/${repo}/pages`, {
       headers: { 'Accept': 'application/vnd.github.v3+json' }
     });
-    return r.status === 200;
+    const ok = (r.status === 200);
+    cacheSet(key, ok);
+    return ok;
   } catch { return false; }
 }
 
 async function fetchIndexHead(repo) {
+  const key = 'head:' + repo;
+  const hit = cacheGet(key);
+  if (hit !== null) return hit;
   try {
     const r = await fetch(`https://raw.githubusercontent.com/${repo}/main/index.html`);
-    if (!r.ok) return '';
+    if (!r.ok) { cacheSet(key, ''); return ''; }
     const text = await r.text();
-    return text.slice(0, 3000);
+    const snippet = text.slice(0, 3000);
+    cacheSet(key, snippet);
+    return snippet;
   } catch { return ''; }
 }
 
