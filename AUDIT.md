@@ -1,5 +1,17 @@
 # Build Quality Dashboard — HAL Stack Rigor Audit
 
+> **⚠ PROGRESS UPDATE 2026-04-22** — All 5 §8 Top-5 next-actions have SHIPPED or are covered. Do NOT treat §8 as an open backlog; re-audit before proposing further QD work.
+>
+> | # | Action | Status |
+> |---|---|---|
+> | 1 | Add explicit `:focus-visible` styling | **Shipped** in `90ad085` S-QD-FOCUS (3px teal outline on 2px offset, keyboard-only) |
+> | 2 | Client-side API response caching (60s TTL via sessionStorage) | **Shipped** in `75da12a` S-QD-CACHE (all 4 GitHub API helpers wrapped) |
+> | 3 | Verify post-axe dark-theme contrast | **Covered** — axe-core CI green; no new findings after the :focus-visible + cache work |
+> | 4 | Extract inline `<script>` to `js/dashboard.js` | **Shipped** in `7bce8ef` S-QD-EXTRACT+INDICATOR (index.html 1928 to 1173 lines) |
+> | 5 | Add "last updated" indicator per card | **Shipped** in `7bce8ef` (same commit as #4; reuses S-QD-CACHE timestamp) |
+
+
+
 **Audit date:** 2026-04-21
 **Auditor:** Claude Code (Opus 4.7 · max-mode autonomous)
 **Sprint:** S-QD-HYGIENE (sixth audit-pattern pass of the day after S-CLARITY, S-KEVIN, S-AARON, S-TBI, S-CC)
