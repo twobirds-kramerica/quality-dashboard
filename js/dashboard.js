@@ -740,19 +740,16 @@ async function runChecks() {
   inp.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') checkPin();
   });
-  inp.addEventListener('input', function () {
-    if (inp.value.length === 4) checkPin();
-  });
 })();
 
 function checkPin() {
   var inp = document.getElementById('pin-input');
   var err = document.getElementById('pin-error');
-  if (inp.value === '2026') {
+  if (inp.value === 'Welcome1!') {
     sessionStorage.setItem('pin_authenticated', 'true');
     document.getElementById('pin-gate').style.display = 'none';
   } else {
-    err.textContent = 'Incorrect PIN — try again';
+    err.textContent = 'Incorrect password — try again';
     inp.classList.remove('shake');
     void inp.offsetWidth;
     inp.classList.add('shake');
