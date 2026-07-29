@@ -58,53 +58,12 @@ const STATIC_REPO_STATS = {
   }
 };
 
-// Build history — last 5 commits per key repo
-// ISO date strings so relative time is calculated automatically
-// Update this block after each session
-const BUILD_HISTORY = {
-  'Digital Confidence Centre': [
-    { date: '2026-04-01', msg: 'feat: LinkedIn content system — 8 posts ready, profile optimisation guide' },
-    { date: '2026-03-31', msg: 'feat: newsletter and sharing system, B2B outreach dashboard' },
-    { date: '2026-03-31', msg: 'fix: complete health audit — meta, broken links, service worker, Canadian English' },
-    { date: '2026-03-28', msg: 'feat: modules 18-19, B2B emails, GitHub Actions, quiz ecosystem' },
-    { date: '2026-03-27', msg: 'feat: AEO 30 pages, scam ecosystem, white label, accessibility AAA' }
-  ],
-  'Career Coach': [
-    { date: '2026-04-02', msg: 'feat: Strengthen My CV — AI analyses CV against job posting' },
-    { date: '2026-04-02', msg: 'feat: LLM portability layer — 3 API calls migrated to llm-provider.js' },
-    { date: '2026-04-02', msg: 'feat: JSON export, privacy notice, product roadmap' },
-    { date: '2026-03-31', msg: 'feat: job stats card, print jobs, mission-driven cover letter' },
-    { date: '2026-03-28', msg: 'feat: Career Coach v1.0 — AI job application tool with scoring' }
-  ],
-  'Clarity': [
-    { date: '2026-04-02', msg: 'feat: LLM portability layer — API call migrated to llm-provider.js' },
-    { date: '2026-04-01', msg: 'feat: Clarity full build — improved form, SWOT grid, quick wins, CTA' },
-    { date: '2026-03-31', msg: 'feat: Clarity AI business diagnostic — initial build' }
-  ],
-  'Aaron Patzalek': [
-    { date: '2026-04-01', msg: 'feat: full personal brand site — story, projects, contact details' },
-    { date: '2026-03-31', msg: 'feat: site final — pricing, proof of work, availability, mobile' }
-  ],
-  'Quality Dashboard': [
-    { date: '2026-03-27', msg: 'feat: repo stats, build history, alerts panel, export' },
-    { date: '2026-03-20', msg: 'chore: quality dashboard sync — score updated to /15' },
-    { date: '2026-03-18', msg: 'feat: add two-birds-innovation to quality dashboard' },
-    { date: '2026-03-15', msg: 'feat: internal strategy summary page — PIN protected' },
-    { date: '2026-03-10', msg: 'feat: quality dashboard — friendly names, tooltips' }
-  ],
-  'Two Birds Innovation': [
-    { date: '2026-04-02', msg: 'feat: Kevin\'s Apt tool card, Work With Aaron section' },
-    { date: '2026-04-01', msg: 'feat: full company site — problem section, 3 tools, Why Two Birds' }
-  ],
-  'Command Centre': [
-    { date: '2026-04-02', msg: 'feat: language bank V2 — Wait For Native, 7 new code words' },
-    { date: '2026-04-01', msg: 'feat: journey timeline — visual commit density chart' },
-    { date: '2026-04-01', msg: 'feat: prompt library + language bank pages' }
-  ],
-  'Elite Karate Site': [
-    { date: '2026-04-02', msg: 'feat: polished — classes, schedule, contact, mobile nav, Canadian English' }
-  ]
-};
+// Build history is fetched LIVE from the GitHub API in checkRepo() below
+// (see BUILD_HISTORY_LIVE, populated per refresh) — no hardcoded data here.
+// Per NO FAKE TIMESTAMPS: this used to be a manually-updated block of fake
+// commit arrays that silently went stale; it now reflects real repo state
+// on every refresh.
+let BUILD_HISTORY_LIVE = {};
 
 /* ─────────────────────────────────────────────────────────────────────────────
    RUNTIME STATE — populated after runChecks() completes
@@ -119,6 +78,13 @@ let lastResults = [];
 // and skip all GitHub API checks.
 const LOCAL_ONLY_REPOS = new Set([
   // All repos now pushed to GitHub — none are local-only as of April 2, 2026
+]);
+
+// Template/scaffold repos are SUPPOSED to sit dormant — a "no commit in
+// 94 days" staleness alert on one of these is noise, not a real signal.
+// Excluded from staleness alerting only; health-score alerts still apply.
+const TEMPLATE_REPOS = new Set([
+  'twobirds-kramerica/two-birds-project-template'
 ]);
 
 const REPOS = [
@@ -242,20 +208,32 @@ function relativeTime(dateInput) {
 /* ─────────────────────────────────────────────────────────────────────────────
    BUILD HISTORY RENDER
 ───────────────────────────────────────────────────────────────────────────── */
+// slug() must match the id used on each repo-card in renderCard(), so
+// alert links and the build-history heading can jump straight to a repo.
+function slug(repo) {
+  return 'repo-' + repo.replace(/[^a-z0-9]+/gi, '-');
+}
+
 function renderBuildHistory() {
   const grid = document.getElementById('history-grid');
-  grid.innerHTML = Object.entries(BUILD_HISTORY).map(([repoName, commits]) => {
-    const items = commits.slice(0, 5).map(c => `
+  const entries = Object.entries(BUILD_HISTORY_LIVE);
+  if (entries.length === 0) {
+    grid.innerHTML = `<p style="color:var(--muted);">Loading live build history…</p>`;
+    return;
+  }
+  grid.innerHTML = entries.map(([repo, commits]) => {
+    const info = REPO_META[repo] || { name: repo };
+    const items = commits.length ? commits.map(c => `
       <li class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content">
           <div class="timeline-msg">${esc(c.msg)}</div>
-          <div class="timeline-date">${relativeTime(c.date + 'T12:00:00')}</div>
+          <div class="timeline-date">${relativeTime(c.date)}</div>
         </div>
-      </li>`).join('');
+      </li>`).join('') : `<li class="timeline-item"><div class="timeline-content"><div class="timeline-msg">No commits found</div></div></li>`;
     return `
       <div class="history-card">
-        <div class="history-repo-name">${esc(repoName)}</div>
+        <a class="history-repo-name" href="#${slug(repo)}">${esc(info.name || repo)}</a>
         <ul class="timeline">${items}</ul>
       </div>`;
   }).join('');
@@ -274,16 +252,18 @@ function renderAlerts(results) {
     const info = REPO_META[d.repo] || { name: d.repo };
     const scorePct = Math.round((d.score / d.total) * 100);
 
-    if (d.daysSince > 14) {
+    if (d.daysSince > 14 && !TEMPLATE_REPOS.has(d.repo)) {
       alerts.push({
         type: 'stale',
-        msg: `${info.name} — no commit in ${d.daysSince} days (last: ${formatDate(d.commitDate)})`
+        msg: `${info.name} — no commit in ${d.daysSince} days (last: ${formatDate(d.commitDate)})`,
+        href: `https://github.com/${d.repo}/commits`
       });
     }
     if (scorePct < 70) {
       alerts.push({
         type: 'score',
-        msg: `${info.name} — health score below 70% (${scorePct}%, ${d.score}/${d.total})`
+        msg: `${info.name} — health score below 70% (${scorePct}%, ${d.score}/${d.total})`,
+        href: `#${slug(d.repo)}`
       });
     }
   });
@@ -298,7 +278,7 @@ function renderAlerts(results) {
     const items = alerts.map(a => `
       <li class="alert-item ${a.type === 'score' ? 'score-alert' : ''}">
         <span class="alert-icon">${a.type === 'score' ? '▼' : '⏰'}</span>
-        <span>${esc(a.msg)}</span>
+        <a href="${esc(a.href)}" ${a.href.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} style="color:inherit;text-decoration:underline;">${esc(a.msg)}</a>
       </li>`).join('');
     panel.innerHTML = `
       <div class="alerts-box has-alerts">
@@ -400,7 +380,7 @@ async function fetchIndexHead(repo) {
 async function checkRepo(repo) {
   const [meta, commits, hasReadme, hasClaude, hasSitemap, hasRobots, hasPages, hasStrategy, indexHead, hasTips, hasSocial, hasGeo] = await Promise.all([
     fetchJSON(`${API}/repos/${repo}`),
-    fetchJSON(`${API}/repos/${repo}/commits?per_page=1`),
+    fetchJSON(`${API}/repos/${repo}/commits?per_page=5`),
     fileExists(repo, 'README.md'),
     fileExists(repo, 'CLAUDE.md'),
     fileExists(repo, 'sitemap.xml'),
@@ -418,6 +398,10 @@ async function checkRepo(repo) {
   const commitMsg    = lastCommit ? lastCommit.commit.message.split('\n')[0] : 'No commits';
   const daysSince    = commitDate ? Math.floor((Date.now() - commitDate) / 86400000) : 999;
   const recentCommit = daysSince < 30;
+  const history = commits.map(c => ({
+    date: c.commit.committer.date,
+    msg: c.commit.message.split('\n')[0]
+  }));
 
   const hasViewport = /meta[^>]+name=["']viewport/i.test(indexHead);
   const hasLang     = /html[^>]+lang=/i.test(indexHead);
@@ -445,7 +429,7 @@ async function checkRepo(repo) {
   const badge = score >= 14 ? 'teal' : score >= 11 ? 'green' : score >= 8 ? 'yellow' : 'red';
   const label = score >= 14 ? 'Excellent' : score >= 11 ? 'Good' : score >= 8 ? 'Fair' : 'Needs Work';
 
-  return { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label };
+  return { repo, meta, commitDate, commitMsg, daysSince, checks, score, total, badge, label, history };
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -547,7 +531,7 @@ function renderCard(data) {
   const fetchedLabel = fetchedTs ? relativeTime(new Date(fetchedTs)) : 'Just now';
 
   return `
-    <div class="repo-card">
+    <div class="repo-card" id="${slug(repo)}">
       <div class="card-header">
         <div class="repo-name-block">
           <div class="repo-name">
@@ -575,19 +559,19 @@ function renderCard(data) {
       </div>
       <div class="repo-stats">
         <div class="stat-item">
-          <span class="stat-label">Files</span>
+          <span class="stat-label">Files ${makeTip('Manually curated, not a live check — updated by hand after each sprint.', 'static-tip')}</span>
           <span class="stat-value">${esc(stats.fileCount)}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Last Commit</span>
+          <span class="stat-label">Last Commit <span class="live-dot" title="Live — GitHub API">●</span></span>
           <span class="stat-value">${commitDate ? relativeTime(commitDate) : 'Never'}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Contributors</span>
+          <span class="stat-label">Contributors ${makeTip('Manually curated, not a live check — updated by hand after each sprint.', 'static-tip')}</span>
           <span class="stat-value">${esc(String(stats.contributors))}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Size</span>
+          <span class="stat-label">Size ${makeTip('Manually curated, not a live check — updated by hand after each sprint.', 'static-tip')}</span>
           <span class="stat-value">${esc(stats.sizeEst)}</span>
         </div>
       </div>
@@ -711,6 +695,14 @@ async function runChecks() {
   remoteRepos.forEach((repo, i) => { resultMap[repo] = remoteResults[i]; });
 
   lastResults = remoteResults; // used by alerts + download report
+
+  // Rebuild live build history from this refresh's commit data.
+  BUILD_HISTORY_LIVE = {};
+  remoteRepos.forEach(repo => {
+    const r = resultMap[repo];
+    if (r.status === 'fulfilled') BUILD_HISTORY_LIVE[repo] = r.value.history;
+  });
+  renderBuildHistory();
 
   grid.innerHTML = REPOS.map(repo => {
     if (LOCAL_ONLY_REPOS.has(repo)) return renderLocalCard(repo);

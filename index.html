@@ -416,6 +416,12 @@
       display: inline-flex;
       align-items: center;
     }
+    .live-dot {
+      color: var(--teal);
+      font-size: 0.6em;
+      vertical-align: middle;
+      cursor: help;
+    }
     .tip-icon {
       display: inline-flex;
       align-items: center;
@@ -864,7 +870,7 @@
 
 <!-- Build History -->
 <div id="history-section">
-  <div class="section-heading">Recent Activity — Build Timeline</div>
+  <div class="section-heading">Recent Activity — Build Timeline <span class="live-dot" title="Live — GitHub API">●</span></div>
   <div class="history-grid" id="history-grid"></div>
 </div>
 
