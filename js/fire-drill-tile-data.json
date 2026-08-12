@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-08-12T02:19:20",
+  "generated_by": "hal-stack/architecture/fire-drill-reports/build-tile-data.py",
+  "reports_read": 1,
+  "reports_with_errors": [],
+  "last_drill": {
+    "date": "2026-08-10",
+    "service": "GitHub",
+    "verdict": "PASSED WITH FINDINGS"
+  },
+  "never_drilled": [
+    "Cloudflare",
+    "Notion",
+    "Gmail"
+  ],
+  "never_drilled_count": 3,
+  "quarterly_floor": {
+    "github": {
+      "met": true,
+      "current_quarter": "2026-Q3",
+      "last_drill_date": "2026-08-10"
+    },
+    "anthropic": {
+      "met": true,
+      "current_quarter": "2026-Q3",
+      "last_drill_date": "2026-08-10"
+    }
+  },
+  "open_followups_total": 3,
+  "source": "hal-stack/architecture/fire-drill-reports/ (two-birds-portfolio repo)"
+}

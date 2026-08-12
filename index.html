@@ -1168,19 +1168,33 @@
       </div>
     </div>
 
-    <!-- Fire Drill -->
+    <!-- Fire Drill — design-baseline: inherits quality-dashboard's existing #hal-section
+         language (.hal-card / .hal-status-row / .hal-badge ok|pending), no new visual
+         system introduced (S-FIRE-DRILL-DASHBOARD-TILE-001, 2026-08-12) -->
     <div class="hal-card">
-      <div class="hal-card-title">🔥 Fire Drill — Sovereignty Blast-Radius Tool</div>
+      <div class="hal-card-title">🔥 Fire Drill — Sovereignty Practice</div>
       <div class="hal-status-row">
-        <span class="hal-status-label">Status</span>
-        <span class="hal-badge pending">⏳ Planned, not built (P3)</span>
+        <span class="hal-status-label">Last drill</span>
+        <span class="hal-badge pending" id="fd-last-drill">loading…</span>
       </div>
       <div class="hal-status-row">
-        <span class="hal-status-label">Last drill run</span>
-        <span class="hal-badge pending">Never (tool not built)</span>
+        <span class="hal-status-label">Last verdict</span>
+        <span class="hal-badge pending" id="fd-last-verdict">loading…</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Runbooks never drilled</span>
+        <span class="hal-badge pending" id="fd-never-drilled">loading…</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Quarterly floor (GitHub + Anthropic)</span>
+        <span class="hal-badge pending" id="fd-quarterly-floor">loading…</span>
+      </div>
+      <div class="hal-status-row">
+        <span class="hal-status-label">Open follow-ups</span>
+        <span class="hal-badge pending" id="fd-open-followups">loading…</span>
       </div>
       <div style="margin-top:10px;font-size:0.72em;color:var(--muted);">
-        Dependency map + "pull a service out" simulator, sized for spare-Fable-capacity runs. Buildout plan: <a href="https://github.com/twobirds-kramerica/two-birds-portfolio/blob/master/hal-stack/strategy/fire-drill-buildout-plan-2026-07-10.md" style="color:var(--teal);text-decoration:none;" target="_blank">fire-drill-buildout-plan →</a>
+        Generated <span id="fd-generated-at">…</span> from the report archive (not hand-typed — rebuild via <code>build-tile-data.py</code>). Reports: <a href="https://github.com/twobirds-kramerica/two-birds-portfolio/tree/master/hal-stack/architecture/fire-drill-reports" style="color:var(--teal);text-decoration:none;" target="_blank">fire-drill-reports →</a>
       </div>
     </div>
 
@@ -1206,6 +1220,7 @@
 <footer>Quality Dashboard &nbsp;|&nbsp; Two Birds Innovation &nbsp;|&nbsp; Checks run against GitHub public API &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/roadmap.html" style="color:var(--teal);text-decoration:none;">View Roadmap →</a> &nbsp;|&nbsp; <a href="../brenda-digital-confidence/admin/strategy.html" style="color:var(--teal);text-decoration:none;">Strategy Docs →</a></footer>
 
 <script src="js/dashboard.js" defer></script>
+<script src="js/fire-drill-tile.js" defer></script>
 
 </main>
 </body>
